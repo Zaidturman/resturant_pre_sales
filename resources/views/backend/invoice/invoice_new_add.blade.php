@@ -442,29 +442,27 @@
                                                         @if ($product->image_url)
                                                             <img src="{{ asset($product->image_url) }}"
                                                                 class="product-image" style="cursor: pointer;"
-                                                                data-bs-toggle="modal" data-bs-target="#productModal"
-                                                                onclick="showProductDetails(
-                                                                    '{{ $product->name }}',
-                                                                    '{{ $product->category->name ?? 'غير مصنف' }}',
-                                                                    '{{ $product->unit->name ?? 'غير محدد' }}',
-                                                                    '{{ $product->selling_price }}',
-                                                                    '{{ $product->quantity ?? 0 }}',
-                                                                    `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
-                                                                    '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
-                                                                )">
+                                                                onclick="showProductDetailsAndOpenModal(
+    '{{ $product->name }}',
+    '{{ $product->category->name ?? 'غير مصنف' }}',
+    '{{ $product->unit->name ?? 'غير محدد' }}',
+    '{{ $product->selling_price }}',
+    '{{ $product->quantity ?? 0 }}',
+    `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
+    '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
+)">
                                                         @else
                                                             <img src="{{ asset('upload/no_image.jpg') }}"
                                                                 class="product-image" style="cursor: pointer;"
-                                                                data-bs-toggle="modal" data-bs-target="#productModal"
-                                                                onclick="showProductDetails(
-                                                                                '{{ $product->name }}',
-                                                                                '{{ $product->category->name ?? 'غير مصنف' }}',
-                                                                                '{{ $product->unit->name ?? 'غير محدد' }}',
-                                                                                '{{ $product->selling_price }}',
-                                                                                '{{ $product->quantity ?? 0 }}',
-                                                                                `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
-                                                                                '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
-                                                                            )">
+                                                                onclick="showProductDetailsAndOpenModal(
+    '{{ $product->name }}',
+    '{{ $product->category->name ?? 'غير مصنف' }}',
+    '{{ $product->unit->name ?? 'غير محدد' }}',
+    '{{ $product->selling_price }}',
+    '{{ $product->quantity ?? 0 }}',
+    `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
+    '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
+)">
                                                         @endif
                                                         <h6>{{ $product->name }}</h6>
                                                         <p class="text-primary">{{ $product->price }} شيكل</p>
@@ -499,15 +497,14 @@
                                                         <div class="row">
                                                             <!-- قسم الصورة -->
                                                             <div class="col-md-5 mb-3 mb-md-0">
-                                                                <div class="col-md-5 mb-3 mb-md-0">
-                                                                    <div class="product-image-container bg-light rounded-3 p-3 text-center"
-                                                                        style="height: 300px;">
-                                                                        <img id="modal-product-image" src=""
-                                                                            alt="صورة المنتج"
-                                                                            class="img-fluid h-100 object-fit-contain">
-                                                                    </div>
+                                                                <div class="product-image-container bg-light rounded-3 p-3 text-center"
+                                                                    style="height: 300px;">
+                                                                    <img id="modal-product-image" src=""
+                                                                        alt="صورة المنتج"
+                                                                        class="img-fluid h-100 object-fit-contain">
                                                                 </div>
                                                             </div>
+
 
                                                             <!-- قسم التفاصيل -->
                                                             <div class="col-md-7">
@@ -710,18 +707,17 @@
         let invoiceItems = {};
 
         // عرض تفاصيل المنتج في المودال
-        function showProductDetails(name, category, unit, price, quantity, descr, imageUrl) {
+        function showProductDetailsAndOpenModal(name, category, unit, price, quantity, descr, imageUrl) {
             document.getElementById('modal-product-name').textContent = name;
             document.getElementById('modal-category').textContent = category;
             document.getElementById('modal-unit').textContent = unit;
-            document.getElementById('modal-price').textContent = parseFloat(price).toFixed(2);
             document.getElementById('modal-quantity').textContent = quantity;
             document.getElementById('modal-descr').innerHTML = descr;
+            document.getElementById('modal-product-image').src = imageUrl;
 
-            // عرض الصورة
-            const modalImage = document.getElementById('modal-product-image');
-            modalImage.src = imageUrl;
-
+            // افتح الـ Modal يدويًا
+            var modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
         }
 
         $(document).ready(function() {
