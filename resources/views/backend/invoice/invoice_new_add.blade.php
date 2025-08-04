@@ -444,30 +444,30 @@
                                                                 class="product-image" style="cursor: pointer;"
                                                                 data-bs-toggle="modal" data-bs-target="#productModal"
                                                                 onclick="showProductDetails(
-         '{{ $product->name }}',
-         '{{ $product->category->name ?? 'غير مصنف' }}',
-         '{{ $product->unit->name ?? 'غير محدد' }}',
-         '{{ $product->selling_price }}',
-         '{{ $product->quantity ?? 0 }}',
-         `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
-         '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
-     )">
+                                                                    '{{ $product->name }}',
+                                                                    '{{ $product->category->name ?? 'غير مصنف' }}',
+                                                                    '{{ $product->unit->name ?? 'غير محدد' }}',
+                                                                    '{{ $product->selling_price }}',
+                                                                    '{{ $product->quantity ?? 0 }}',
+                                                                    `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
+                                                                    '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
+                                                                )">
                                                         @else
                                                             <img src="{{ asset('upload/no_image.jpg') }}"
                                                                 class="product-image" style="cursor: pointer;"
                                                                 data-bs-toggle="modal" data-bs-target="#productModal"
                                                                 onclick="showProductDetails(
-         '{{ $product->name }}',
-         '{{ $product->category->name ?? 'غير مصنف' }}',
-         '{{ $product->unit->name ?? 'غير محدد' }}',
-         '{{ $product->selling_price }}',
-         '{{ $product->quantity ?? 0 }}',
-         `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
-         '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
-     )">
+                                                                                '{{ $product->name }}',
+                                                                                '{{ $product->category->name ?? 'غير مصنف' }}',
+                                                                                '{{ $product->unit->name ?? 'غير محدد' }}',
+                                                                                '{{ $product->selling_price }}',
+                                                                                '{{ $product->quantity ?? 0 }}',
+                                                                                `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
+                                                                                '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
+                                                                            )">
                                                         @endif
                                                         <h6>{{ $product->name }}</h6>
-                                                        <p class="text-primary">{{ $product->selling_price }} شيكل</p>
+                                                        <p class="text-primary">{{ $product->price }} شيكل</p>
                                                         <div class="product-quantity-control">
                                                             <div class="quantity-btn"
                                                                 onclick="changeProductQuantity({{ $product->id }}, -1)">
