@@ -1,13 +1,18 @@
 @php
-$user = Auth::user();
+    $user = Auth::user();
 
-if ($user !== null) {
-$id = $user->id;
-$adminData = App\Models\User::find($id);
-} else {
-dd('No authenticated user.');
-}
+    if ($user !== null) {
+        $id = $user->id;
+        $adminData = App\Models\User::find($id);
+    } else {
+        dd('No authenticated user.');
+    }
 @endphp
+<style>
+    .navbar-header {
+        background-color: #0606 !important;
+    }
+</style>
 
 <header id="page-topbar">
     <div class="navbar-header">
@@ -25,14 +30,15 @@ dd('No authenticated user.');
 
                 <a href="{{ route('dashboard') }}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{ asset('backend/assets/images/logo-dark.png') }}" alt="logo-sm-light" height="45">
+                        <img src="{{ asset('backend/assets/images/logo-dark.png') }}" alt="logo-sm-light"
+                            height="45">
                     </span>
                     <span class="logo-lg">
                         <img src="{{ asset('backend/assets/images/logo-dark.png') }}" alt="logo-light" height="70">
                     </span>
                 </a>
             </div>
-            
+
 
             <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
                 <i class="ri-menu-2-line align-middle"></i>
@@ -49,7 +55,7 @@ dd('No authenticated user.');
 
         <div class="d-flex">
             <div class="dropdown  d-lg-inline-block ms-1">
-                <a href="{{route('invoice.add')}}">
+                <a href="{{ route('invoice.add') }}">
                     <button type="button" class="btn header-item noti-icon waves-effect">
 
                         <i class="ri-shopping-cart-line"></i> <!-- Shopping Cart icon -->
@@ -64,19 +70,25 @@ dd('No authenticated user.');
             </div>
 
             <div class="dropdown d-inline-block user-dropdown">
-                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ (!empty($adminData->profile_image))? url('upload/admin_images/'.$adminData->profile_image):url('upload/no_image.jpg') }}" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1">{{$adminData->username}}</span>
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user"
+                        src="{{ !empty($adminData->profile_image) ? url('upload/admin_images/' . $adminData->profile_image) : url('upload/no_image.jpg') }}"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1">{{ $adminData->username }}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-start">
                     <!-- item-->
-                    <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="ri-user-line align-middle me-1"></i> الحساب</a>
-                    <a class="dropdown-item" href="{{route('change.password')}}"><i class="ri-wallet-2-line align-middle me-1"></i> تغيير كلمة المرور</a>
+                    <a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                            class="ri-user-line align-middle me-1"></i> الحساب</a>
+                    <a class="dropdown-item" href="{{ route('change.password') }}"><i
+                            class="ri-wallet-2-line align-middle me-1"></i> تغيير كلمة المرور</a>
 
                     <div class="dropdown-divider"></div>
 
-                    <a class="dropdown-item text-danger" href="{{route('admin.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> تسجيل خروج</a>
+                    <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i
+                            class="ri-shut-down-line align-middle me-1 text-danger"></i> تسجيل خروج</a>
                 </div>
             </div>
 
