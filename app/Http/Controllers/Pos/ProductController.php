@@ -34,6 +34,10 @@ class ProductController extends Controller
             'unit_id' => 'required|exists:units,id',
             'category_id' => 'required|exists:categories,id',
             'price' => 'nullable|numeric|min:0',
+            'special_price' => 'nullable|numeric|min:0',
+            'capacity' => 'nullable|string|max:50',
+            'weight' => 'nullable|string|max:50',
+            'unique_code' => 'nullable|string|max:50|unique:products',
             'descr' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -43,12 +47,19 @@ class ProductController extends Controller
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
+        // إنشاء رمز خاص إذا لم يتم تقديمه
+        $uniqueCode = $validated['unique_code'] ?? $this->generateUniqueCode();
+
         Product::create([
             'name' => $validated['name'],
             'unit_id' => $validated['unit_id'],
             'category_id' => $validated['category_id'],
             'quantity' => 0,
             'price' => $validated['price'] ?? 0,
+            'special_price' => $validated['special_price'] ?? null,
+            'capacity' => $validated['capacity'] ?? null,
+            'weight' => $validated['weight'] ?? null,
+            'unique_code' => $uniqueCode,
             'descr' => $validated['descr'] ?? null,
             'image_url' => $imagePath ? asset('storage/' . $imagePath) : null,
             'created_by' => Auth::id(),
@@ -71,6 +82,7 @@ class ProductController extends Controller
         return view('backend.product.product_edit', compact('product', 'category', 'unit'));
     }
 
+
     public function ProductUpdate(Request $request)
     {
         $product_id = $request->id;
@@ -80,15 +92,16 @@ class ProductController extends Controller
             'unit_id' => 'required|exists:units,id',
             'category_id' => 'required|exists:categories,id',
             'price' => 'nullable|numeric|min:0',
+            'special_price' => 'nullable|numeric|min:0',
+            'capacity' => 'nullable|string|max:50',
+            'weight' => 'nullable|string|max:50',
+            'unique_code' => 'nullable|string|max:50|unique:products,unique_code,' . $product_id,
             'descr' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            // حذف الصورة القديمة (اختياري)
-            // يمكنك إضافة منطق لحذف الصورة القديمة من المجلد
-
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
@@ -98,6 +111,10 @@ class ProductController extends Controller
             'unit_id' => $validated['unit_id'],
             'category_id' => $validated['category_id'],
             'price' => $validated['price'] ?? 0,
+            'special_price' => $validated['special_price'] ?? null,
+            'capacity' => $validated['capacity'] ?? null,
+            'weight' => $validated['weight'] ?? null,
+            'unique_code' => $validated['unique_code'] ?? $product->unique_code,
             'descr' => $validated['descr'] ?? null,
             'image_url' => $imagePath ? asset('storage/' . $imagePath) : $product->image_url,
             'updated_by' => Auth::id(),
@@ -110,6 +127,16 @@ class ProductController extends Controller
         ];
 
         return redirect()->route('product.all')->with($notification);
+    }
+
+    // دالة مساعدة لإنشاء رمز فريد
+    private function generateUniqueCode($prefix = 'PRD-')
+    {
+        do {
+            $code = $prefix . strtoupper(substr(md5(uniqid()), 0, 6));
+        } while (Product::where('unique_code', $code)->exists());
+
+        return $code;
     }
 
     public function DeleteProduct($id)

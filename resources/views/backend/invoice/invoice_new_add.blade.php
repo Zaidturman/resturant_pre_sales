@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <style>
         /* التصميم العام */
         .step-container {
@@ -348,6 +347,119 @@
         #products-list .product-item {
             margin-bottom: 0;
         }
+
+        .bg-info-light {
+            background-color: rgba(13, 202, 240, 0.1);
+        }
+
+        .text-info {
+            color: #0dcaf0 !important;
+        }
+
+        /* أحجام بطاقات المنتجات حسب عدد الأعمدة */
+        .grid-col.col-md-2 .product-card {
+            height: 280px;
+            transition: all 0.3s ease;
+        }
+
+        .grid-col.col-md-3 .product-card {
+            height: 320px;
+            transition: all 0.3s ease;
+        }
+
+        .grid-col.col-md-4 .product-card {
+            height: 360px;
+            transition: all 0.3s ease;
+        }
+
+        /* أحجام الصور حسب عدد الأعمدة */
+        .grid-col.col-md-2 .product-image {
+            height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .grid-col.col-md-3 .product-image {
+            height: 140px;
+            transition: all 0.3s ease;
+        }
+
+        .grid-col.col-md-4 .product-image {
+            height: 180px;
+            transition: all 0.3s ease;
+        }
+
+        /* تحسين عرض المحتوى داخل البطاقات */
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        .product-card h6 {
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .grid-col.col-md-3 .product-card h6 {
+            font-size: 15px;
+        }
+
+        .grid-col.col-md-4 .product-card h6 {
+            font-size: 16px;
+        }
+
+        /* تحسين أزرار الكمية */
+        .product-quantity-control {
+            margin-top: auto;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-col.col-md-3 .product-card {
+                height: 300px;
+            }
+
+            .grid-col.col-md-4 .product-card {
+                height: 340px;
+            }
+
+            .grid-col.col-md-3 .product-image {
+                height: 120px;
+            }
+
+            .grid-col.col-md-4 .product-image {
+                height: 160px;
+            }
+        }
+
+        @media (max-width: 992px) {
+
+            .grid-col.col-md-3 .product-card,
+            .grid-col.col-md-4 .product-card {
+                height: 280px;
+            }
+
+            .grid-col.col-md-3 .product-image,
+            .grid-col.col-md-4 .product-image {
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .grid-col.col-md-2 .product-card,
+            .grid-col.col-md-3 .product-card,
+            .grid-col.col-md-4 .product-card {
+                height: 240px;
+            }
+
+            .grid-col.col-md-2 .product-image,
+            .grid-col.col-md-3 .product-image,
+            .grid-col.col-md-4 .product-image {
+                height: 80px;
+            }
+        }
     </style>
 
     <div class="page-content">
@@ -469,7 +581,7 @@
                                                     data-cols="3">3</button>
                                             </div>
                                         </div>
-                                        <div class="row" id="products-list">
+                                        <div class="row" id="products-list  product-card-content">
                                             @foreach ($products as $product)
                                                 <div class="col-md-2 product-item grid-col"
                                                     data-category-id="{{ $product->category_id }}"
@@ -479,26 +591,36 @@
                                                             <img src="{{ asset($product->image_url) }}"
                                                                 class="product-image" style="cursor: pointer;"
                                                                 onclick="showProductDetailsAndOpenModal(
-    '{{ $product->name }}',
-    '{{ $product->category->name ?? 'غير مصنف' }}',
-    '{{ $product->unit->name ?? 'غير محدد' }}',
-    '{{ $product->selling_price }}',
-    '{{ $product->quantity ?? 0 }}',
-    `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
-    '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
-)">
+                                                                    '{{ $product->id }}',
+                                                                    '{{ $product->name }}',
+                                                                    '{{ $product->category->name ?? 'غير مصنف' }}',
+                                                                    '{{ $product->unit->name ?? 'غير محدد' }}',
+                                                                    '{{ $product->selling_price }}',
+                                                                    '{{ $product->quantity ?? 0 }}',
+                                                                    `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
+                                                                    '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}',
+                                                                    '{{ $product->special_price }}',
+                                                                    '{{ $product->capacity }}',
+                                                                    '{{ $product->weight }}',
+                                                                    '{{ $product->unique_code }}'
+                                                                )">
                                                         @else
                                                             <img src="{{ asset('upload/no_image.jpg') }}"
                                                                 class="product-image" style="cursor: pointer;"
                                                                 onclick="showProductDetailsAndOpenModal(
-    '{{ $product->name }}',
-    '{{ $product->category->name ?? 'غير مصنف' }}',
-    '{{ $product->unit->name ?? 'غير محدد' }}',
-    '{{ $product->selling_price }}',
-    '{{ $product->quantity ?? 0 }}',
-    `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
-    '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}'
-)">
+                                                                '{{ $product->id }}',
+                                                                '{{ $product->name }}',
+                                                                '{{ $product->category->name ?? 'غير مصنف' }}',
+                                                                '{{ $product->unit->name ?? 'غير محدد' }}',
+                                                                '{{ $product->selling_price }}',
+                                                                '{{ $product->quantity ?? 0 }}',
+                                                                `{!! addslashes($product->descr ?? 'لا يوجد وصف') !!}`,
+                                                                '{{ $product->image_url ? asset($product->image_url) : asset('upload/no_image.jpg') }}',
+                                                                '{{ $product->special_price }}',
+                                                                '{{ $product->capacity }}',
+                                                                '{{ $product->weight }}',
+                                                                '{{ $product->unique_code }}'
+                                                            )">
                                                         @endif
                                                         <h6>{{ $product->name }}</h6>
                                                         <p class="text-primary">{{ $product->price }} شيكل</p>
@@ -541,7 +663,6 @@
                                                                 </div>
                                                             </div>
 
-
                                                             <!-- قسم التفاصيل -->
                                                             <div class="col-md-7">
                                                                 <ul class="list-group list-group-flush">
@@ -553,6 +674,12 @@
                                                                     </li>
                                                                     <li
                                                                         class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                        <strong class="text-muted">الرمز الخاص:</strong>
+                                                                        <span id="modal-unique-code"
+                                                                            class="badge bg-info-light text-info"></span>
+                                                                    </li>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">الفئة:</strong>
                                                                         <span id="modal-category"
                                                                             class="badge bg-primary-light text-primary"></span>
@@ -561,6 +688,28 @@
                                                                         class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">الوحدة:</strong>
                                                                         <span id="modal-unit" class="fw-bold"></span>
+                                                                    </li>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                        <strong class="text-muted">السعر:</strong>
+                                                                        <span id="modal-price"
+                                                                            class="fw-bold text-success"></span>
+                                                                    </li>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                        <strong class="text-muted">السعر الخاص:</strong>
+                                                                        <span id="modal-special-price"
+                                                                            class="fw-bold text-danger"></span>
+                                                                    </li>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                        <strong class="text-muted">السعة:</strong>
+                                                                        <span id="modal-capacity" class="fw-bold"></span>
+                                                                    </li>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                        <strong class="text-muted">الوزن:</strong>
+                                                                        <span id="modal-weight" class="fw-bold"></span>
                                                                     </li>
                                                                     <li
                                                                         class="list-group-item d-flex justify-content-between align-items-center py-3">
@@ -582,6 +731,10 @@
                                                         <button type="button" class="btn btn-outline-secondary px-4"
                                                             data-bs-dismiss="modal">
                                                             <i class="fas fa-times me-2"></i>إغلاق
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary px-4"
+                                                            onclick="addProductToInvoiceFromModal()">
+                                                            <i class="fas fa-cart-plus me-2"></i>إضافة إلى الفاتورة
                                                         </button>
                                                     </div>
                                                 </div>
@@ -746,6 +899,12 @@
                 if (cols == 6) item.classList.add('col-md-2');
                 else if (cols == 4) item.classList.add('col-md-3');
                 else if (cols == 3) item.classList.add('col-md-4');
+
+                // إضافة كلاس حسب عدد الأعمدة لتغيير الحجم
+                item.querySelector('.product-card').classList.remove('size-6', 'size-4', 'size-3');
+                if (cols == 6) item.querySelector('.product-card').classList.add('size-6');
+                else if (cols == 4) item.querySelector('.product-card').classList.add('size-4');
+                else if (cols == 3) item.querySelector('.product-card').classList.add('size-3');
             });
             // حفظ التفضيل
             localStorage.setItem('productGridCols', cols);
@@ -784,19 +943,52 @@
         let invoiceItems = {};
 
         // عرض تفاصيل المنتج في المودال
-        function showProductDetailsAndOpenModal(name, category, unit, price, quantity, descr, imageUrl) {
+        function showProductDetailsAndOpenModal(productId, name, category, unit, price, quantity, descr, imageUrl,
+            specialPrice = null, capacity = null, weight = null, uniqueCode = null) {
+
+            // تعبئة بيانات المنتج الأساسية
             document.getElementById('modal-product-name').textContent = name;
             document.getElementById('modal-category').textContent = category;
             document.getElementById('modal-unit').textContent = unit;
+            document.getElementById('modal-price').textContent = price + ' شيكل';
             document.getElementById('modal-quantity').textContent = quantity;
             document.getElementById('modal-descr').innerHTML = descr;
             document.getElementById('modal-product-image').src = imageUrl;
 
-            // افتح الـ Modal يدويًا
+            // تعبئة الحقول الجديدة
+            document.getElementById('modal-special-price').textContent = specialPrice ? specialPrice + ' شيكل' : 'غير محدد';
+            document.getElementById('modal-capacity').textContent = capacity || 'غير محدد';
+            document.getElementById('modal-weight').textContent = weight || 'غير محدد';
+            document.getElementById('modal-unique-code').textContent = uniqueCode || 'غير محدد';
+
+            // تخزين ID المنتج للاستخدام لاحقاً
+            document.getElementById('productModal').setAttribute('data-product-id', productId);
+
+            // افتح الـ Modal
             var modal = new bootstrap.Modal(document.getElementById('productModal'));
             modal.show();
         }
+        // إضافة المنتج إلى الفاتورة من الـ Modal
+        function addProductToInvoiceFromModal() {
+            const productId = document.getElementById('productModal').getAttribute('data-product-id');
+            if (productId) {
+                // زيادة الكمية بمقدار 1
+                changeProductQuantity(parseInt(productId), 1);
 
+                // إغلاق الـ Modal
+                var modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                modal.hide();
+
+                // عرض رسالة تأكيد
+                Toastify({
+                    text: "تمت إضافة المنتج إلى الفاتورة",
+                    duration: 2000,
+                    gravity: "top",
+                    position: "left",
+                    backgroundColor: "#28a745",
+                }).showToast();
+            }
+        }
         $(document).ready(function() {
             // تهيئة Select2 للبحث عن الزبائن
             $('#customer_search').select2({

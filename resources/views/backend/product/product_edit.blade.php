@@ -61,6 +61,38 @@
                                             min="0" value="{{ old('price', $product->price) }}">
                                     </div>
                                 </div>
+                                <!-- بعد حقل السعر -->
+                                <div class="row mb-3">
+                                    <label for="special_price" class="col-sm-2 col-form-label">السعر الخاص</label>
+                                    <div class="form-group col-sm-10">
+                                        <input name="special_price" class="form-control" type="number" step="0.01"
+                                            min="0" value="{{ old('special_price', $product->special_price) }}">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="capacity" class="col-sm-2 col-form-label">السعة</label>
+                                    <div class="form-group col-sm-10">
+                                        <input name="capacity" class="form-control" type="text"
+                                            value="{{ old('capacity', $product->capacity) }}" placeholder="مثال: 500ml">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="weight" class="col-sm-2 col-form-label">الوزن</label>
+                                    <div class="form-group col-sm-10">
+                                        <input name="weight" class="form-control" type="text"
+                                            value="{{ old('weight', $product->weight) }}" placeholder="مثال: 2kg">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="unique_code" class="col-sm-2 col-form-label">الرمز الخاص</label>
+                                    <div class="form-group col-sm-10">
+                                        <input name="unique_code" class="form-control" type="text"
+                                            value="{{ old('unique_code', $product->unique_code) }}" readonly>
+                                    </div>
+                                </div>
 
                                 <!-- الوصف -->
                                 <div class="row mb-3">
