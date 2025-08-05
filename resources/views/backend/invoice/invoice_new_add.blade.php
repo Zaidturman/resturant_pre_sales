@@ -323,6 +323,31 @@
         .product-image-container {
             border: 1px dashed #dee2e6;
         }
+
+        .grid-col.col-md-2 {
+            width: 16.6667%;
+        }
+
+        /* 6 per row */
+        .grid-col.col-md-3 {
+            width: 25%;
+        }
+
+        /* 4 per row */
+        .grid-col.col-md-4 {
+            width: 33.3333%;
+        }
+
+        /* 3 per row */
+        #products-list {
+            display: flex;
+            flex-wrap: wrap;
+
+        }
+
+        #products-list .product-item {
+            margin-bottom: 0;
+        }
     </style>
 
     <div class="page-content">
@@ -433,11 +458,22 @@
                                             <i class="fas fa-search"></i>
                                         </div>
 
-                                        <h5 class="mb-3">المنتجات</h5>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="mb-0">المنتجات</h5>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-outline-secondary btn-grid"
+                                                    data-cols="6">6</button>
+                                                <button type="button" class="btn btn-outline-secondary btn-grid"
+                                                    data-cols="4">4</button>
+                                                <button type="button" class="btn btn-outline-secondary btn-grid"
+                                                    data-cols="3">3</button>
+                                            </div>
+                                        </div>
                                         <div class="row" id="products-list">
                                             @foreach ($products as $product)
-                                                <div class="col-md-2 product-item"
-                                                    data-category-id="{{ $product->category_id }}">
+                                                <div class="col-md-2 product-item grid-col"
+                                                    data-category-id="{{ $product->category_id }}"
+                                                    style="display: none;">
                                                     <div class="product-card">
                                                         @if ($product->image_url)
                                                             <img src="{{ asset($product->image_url) }}"
@@ -702,6 +738,47 @@
     </button>
 
     <script>
+        // عدد الكروت في السطر
+        function setGridColumns(cols) {
+            const items = document.querySelectorAll('.grid-col');
+            items.forEach(item => {
+                item.classList.remove('col-md-2', 'col-md-3', 'col-md-4');
+                if (cols == 6) item.classList.add('col-md-2');
+                else if (cols == 4) item.classList.add('col-md-3');
+                else if (cols == 3) item.classList.add('col-md-4');
+            });
+            // حفظ التفضيل
+            localStorage.setItem('productGridCols', cols);
+        }
+
+        // عند الضغط على أزرار الشبكة
+        document.querySelectorAll('.btn-grid').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.btn-grid').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const cols = parseInt(this.getAttribute('data-cols'));
+                setGridColumns(cols);
+            });
+        });
+
+        // عند التحميل: تحقق من localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedCols = localStorage.getItem('productGridCols');
+            const cols = savedCols ? parseInt(savedCols) : 6; // افتراضي: 6
+
+            // تفعيل الزر المحفوظ
+            document.querySelectorAll('.btn-grid').forEach(btn => {
+                if (parseInt(btn.getAttribute('data-cols')) === cols) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // تطبيق التنسيق
+            setGridColumns(cols);
+
+            // عرض المنتجات بعد التهيئة
+            $('.product-item').show(); // تأكد أن المنتجات تُعرض بعد التهيئة
+        });
         // تخزين كميات المنتجات
         let productQuantities = {};
         let invoiceItems = {};
