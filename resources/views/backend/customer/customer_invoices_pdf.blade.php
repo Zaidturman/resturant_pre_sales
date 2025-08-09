@@ -275,53 +275,66 @@
                     <tr class="total-row">
                         <td colspan="4" style="text-align: left;"><strong>الرصيد المتبقي:</strong></td>
                         <td><strong><span class="currency">{{ number_format($payment->due_amount, 2) }}</span></strong>
+
                         </td>
                     </tr>
                 </tbody>
             </table>
+          
+ @php
+    $partialPayments = \App\Models\PartialPayment::whereHas('invoices', function($query) use ($payment) {
+        $query->where('invoice_id', $payment->invoice->id);
+    })->get();
+@endphp
+    @if($partialPayments->isNotEmpty())
+    <div style="margin-top: 20px;">
+        <h4 style="border-bottom: 1px solid #ddd; padding-bottom: 5px; font-size: 14pt;">سجل الدفعات:</h4>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 10pt;">
+            <thead>
+                <tr style="background-color: #f5f5f5;">
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">#</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">رقم الدفعة</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">تاريخ الدفعة</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">المبلغ</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">طريقة الدفع</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($payment->partialPayments as $index => $partial)
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ $index + 1 }}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">PAY-{{ str_pad($partial->id, 5, '0', STR_PAD_LEFT) }}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ date('d/m/Y', strtotime($partial->payment_date)) }}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><span class="currency">{{ number_format($partial->amount, 2) }}</span></td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">
+                        @if($partial->payment_method == 'cash_shekel')
+                            نقدي شيكل
+                        @elseif($partial->payment_method == 'cash_dinar')
+                            نقدي دينار
+                        @else
+                            شيك
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+                <tr style="font-weight: bold; background-color: #f9f9f9;">
+                    <td colspan="3" style="border: 1px solid #ddd; padding: 8px; text-align: right;">إجمالي الدفعات:</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><span class="currency">{{ number_format($payment->partialPayments->sum('amount'), 2) }}</span></td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+@else
+    <div style="margin-top: 15px; color: #777; font-style: italic;">
+        لا توجد دفعات مسجلة لهذه الفاتورة
+    </div>
+@endif
 
-            @if ($payment->invoice->partialPayments && $payment->invoice->partialPayments->isNotEmpty())
-                <div style="margin-top: 20px;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 12pt;">سجل الدفعات:</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 10%;">#</th>
-                                <th style="width: 20%;">تاريخ الدفع</th>
-                                <th style="width: 25%;">المبلغ</th>
-                                <th style="width: 25%;">طريقة الدفع</th>
-                                <th style="width: 20%;">المرجع</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($payment->invoice->partialPayments as $pp)
-                                <tr>
-                                    <td>{{ $pp->id }}</td>
-                                    <td>{{ $pp->payment_date }}</td>
-                                    <td><span class="currency">{{ number_format($pp->amount, 2) }}</span></td>
-                                    <td>
-                                        @if ($pp->payment_method == 'cash_shekel')
-                                            نقدي (شيكل)
-                                        @elseif($pp->payment_method == 'cash_dinar')
-                                            نقدي (دينار)
-                                        @elseif($pp->payment_method == 'check')
-                                            شيك بنكي
-                                        @else
-                                            {{ $pp->payment_method }}
-                                        @endif
-                                    </td>
-                                    <td>{{ $pp->payment_ref ?? '--' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-
-            @if (!$loop->last)
-                <div style="height: 30px;"></div>
-            @endif
+        @if(!$loop->last)
+            <div style="page-break-after: always;"></div>
         @endif
+    @endif
     @endforeach
 
     <div class="signature-area">

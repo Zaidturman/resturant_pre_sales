@@ -31,4 +31,8 @@ public function invoices()
     {
         return $this->belongsTo(Customer::class);
     }
+    public function payment()
+{
+    return $this->belongsTo(Payment::class, 'invoice_id', 'invoice_id');
+}
 }

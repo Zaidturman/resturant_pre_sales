@@ -23,32 +23,44 @@ class CustomerController extends Controller
 
 
 
-    public function generateInvoicesPDF($id)
-    {
-        $customer = Customer::findOrFail($id);
-        $payments = Payment::where('customer_id', $id)
-            ->with('invoice.invoice_details.product')
-            ->get();
+   public function generateInvoicesPDF($id)
+{
+    $customer = Customer::findOrFail($id);
+    
+    // جلب جميع الفواتير مع العلاقات المطلوبة
+    $payments = Payment::where('customer_id', $id)
+        ->with([
+            'invoice.invoice_details.product',
+            'partialPayments' => function($query) {
+                $query->orderBy('payment_date', 'asc');
+            }
+        ])
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        $safeName = preg_replace('/[\/\\\\<>?:"*|]/', '-', $customer->name);
-        $safeName = trim($safeName, '-.');
-        $filename = 'فواتير_الزبون_' . $safeName . '.pdf';
-
-        $mpdf = new Mpdf([
-            'mode' => 'utf-8',
-            'format' => 'A4',
-            'orientation' => 'P',
-            'default_font' => 'sans-serif',
-            'autoScriptToLang' => true,
-            'autoLangToFont' => true,
-            'directionality' => 'rtl'
-        ]);
-
-        $html = view('backend.customer.customer_invoices_pdf', compact('customer', 'payments'))->render();
-        $mpdf->WriteHTML($html);
-
-        return $mpdf->Output($filename, 'I');
+    // التأكد من وجود بيانات الدفعات
+    foreach ($payments as $payment) {
+        if ($payment->partialPayments->isEmpty()) {
+            $payment->partialPayments = collect(); // إنشاء مجموعة فارغة إذا لم توجد دفعات
+        }
     }
+
+    $filename = 'كشف_حساب_' . str_replace(['/', '\\'], '-', $customer->name) . '.pdf';
+
+    $mpdf = new Mpdf([
+        'mode' => 'utf-8',
+        'format' => 'A4',
+        'orientation' => 'P',
+        'default_font' => 'dejavusans',
+        'default_font_size' => 12,
+        'directionality' => 'rtl'
+    ]);
+
+    $html = view('backend.customer.customer_invoices_pdf', compact('customer', 'payments'))->render();
+    $mpdf->WriteHTML($html);
+    
+    return $mpdf->Output($filename, 'I');
+}
     public function CustomerAll()
     {
         $customers = Customer::latest()->get();
