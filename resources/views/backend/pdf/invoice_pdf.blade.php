@@ -88,6 +88,7 @@
                                     </div>
 
                                 </div>
+
                             </div> <!-- end row -->
 
                             <div class="row">
@@ -250,6 +251,71 @@
                                     </div>
 
                                 </div>
+                                <!-- قسم الدفعات المرتبطة بالفاتورة -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">سجل الدفعات</h4>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>رقم الدفعة</th>
+                                <th>تاريخ الدفعة</th>
+                                <th>المبلغ</th>
+                                <th>الخصم</th>
+                                <th>المبلغ الصافي</th>
+                                <th>طريقة الدفع</th>
+                                <th>الفاتورة المطبقة</th>
+                                <th>ملاحظات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($partialPayments as $key => $payment)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>PAY-{{ str_pad($payment->id, 5, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ date('d/m/Y', strtotime($payment->payment_date)) }}</td>
+                                <td>₪{{ number_format($payment->amount, 2) }}</td>
+                                <td>₪{{ number_format($payment->discount_amount, 2) }}</td>
+                                <td>₪{{ number_format($payment->net_amount, 2) }}</td>
+                                <td>
+                                    @if($payment->payment_method == 'cash_shekel')
+                                        نقدي شيكل
+                                    @elseif($payment->payment_method == 'cash_dinar')
+                                        نقدي دينار
+                                    @else
+                                        شيك
+                                    @endif
+                                </td>
+                                <td>
+                                    @foreach($payment->invoices as $invoice)
+                                        الفاتورة #{{ $invoice->invoice_no }}<br>
+                                        (₪{{ number_format($invoice->pivot->amount, 2) }})
+                                    @endforeach
+                                </td>
+                                <td>{{ $payment->notes ?? '-' }}</td>
+                            </tr>
+                            @endforeach
+                            
+                            @if($partialPayments->isEmpty())
+                            <tr>
+                                <td colspan="9" class="text-center">لا توجد دفعات مسجلة لهذه الفاتورة</td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- إضافة زر لإضافة دفعة جديدة -->
+               
+            </div>
+        </div>
+    </div>
+</div>
                             </div> <!-- end row -->
 
                         </div>
