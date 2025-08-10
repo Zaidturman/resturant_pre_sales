@@ -155,12 +155,7 @@ class PartialPaymentController extends Controller
         $amount -= $paymentAmount;
     }
 
-    // يمكنك حفظ الفواتير التي تم تطبيق الدفعة عليها إذا كنت تريدها في حقل واحد
-    if ($appliedInvoices->isNotEmpty()) {
-        $payment->update([
-            'applied_invoices' => $appliedInvoices->implode(',')
-        ]);
-    }
+   
 }
 
   protected function reversePaymentFromInvoices(PartialPayment $payment, $amount)
