@@ -43,10 +43,8 @@ class PartialPaymentController extends Controller
            
             'amount' => $request->amount,
             'discount_amount' => $request->discount_amount ?? 0,
-            'net_amount' => $netAmount,
             'payment_method' => $request->payment_method,
             'payment_date' => $request->payment_date,
-            'notes' => $request->notes
         ]);
 
 
