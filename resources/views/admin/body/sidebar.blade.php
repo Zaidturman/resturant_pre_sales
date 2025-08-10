@@ -102,6 +102,13 @@
                         <span>عروض الاسعار</span>
                     </a>
                 </li>
+
+                  <li>
+                    <a href="{{ route('order.index') }}" class="waves-effect">
+                        <i class="ri-dashboard-line"></i>
+                        <span>الطلبيات </span>
+                    </a>
+                </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-wallet-3-fill"></i>
