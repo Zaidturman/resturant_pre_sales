@@ -23,27 +23,22 @@ class CustomerController extends Controller
 
 
 
-   public function generateInvoicesPDF($id)
+public function generateInvoicesPDF($id)
 {
     $customer = Customer::findOrFail($id);
-    
-    // جلب جميع الفواتير مع العلاقات المطلوبة
+
     $payments = Payment::where('customer_id', $id)
         ->with([
-            'invoice.invoice_details.product',
+            'invoice' => function($query) {
+                $query->with('invoice_details.product');
+            },
             'partialPayments' => function($query) {
-                $query->orderBy('payment_date', 'asc');
+                $query->with('invoices.invoice') // تأكد من تحميل الفاتورة المرتبطة
+                      ->orderBy('payment_date', 'asc');
             }
         ])
         ->orderBy('created_at', 'desc')
         ->get();
-
-    // التأكد من وجود بيانات الدفعات
-    foreach ($payments as $payment) {
-        if ($payment->partialPayments->isEmpty()) {
-            $payment->partialPayments = collect(); // إنشاء مجموعة فارغة إذا لم توجد دفعات
-        }
-    }
 
     $filename = 'كشف_حساب_' . str_replace(['/', '\\'], '-', $customer->name) . '.pdf';
 
@@ -58,7 +53,7 @@ class CustomerController extends Controller
 
     $html = view('backend.customer.customer_invoices_pdf', compact('customer', 'payments'))->render();
     $mpdf->WriteHTML($html);
-    
+
     return $mpdf->Output($filename, 'I');
 }
     public function CustomerAll()

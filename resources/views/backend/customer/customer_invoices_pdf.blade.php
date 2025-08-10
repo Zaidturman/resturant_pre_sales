@@ -281,14 +281,25 @@
                 </tbody>
             </table>
           
- @php
-    $partialPayments = \App\Models\PartialPayment::whereHas('invoices', function($query) use ($payment) {
-        $query->where('invoice_id', $payment->invoice->id);
-    })->get();
+@php
+
+$id = $payment->invoice->id;
+    // جلب الدفعات الجزئية المرتبطة بهذه الفاتورة فقط
+   $partialPayments = \App\Models\PartialPayment::whereHas('invoices', function($query) use ($id) {
+            $query->where('invoice_id', $id);
+        })
+        ->with(['invoices' => function($query) use ($id) {
+            $query->where('invoice_id', $id);
+        }])
+        ->orderBy('payment_date', 'asc')
+        ->get();
 @endphp
-    @if($partialPayments->isNotEmpty())
+
+
+
+@if($partialPayments->isNotEmpty())
     <div style="margin-top: 20px;">
-        <h4 style="border-bottom: 1px solid #ddd; padding-bottom: 5px; font-size: 14pt;">سجل الدفعات:</h4>
+        <h4 style="border-bottom: 1px solid #ddd; padding-bottom: 5px; font-size: 14pt;"> سجل الدفعات: للفاتورة {{ $payment->invoice->invoice_no }} </h4>
         <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 10pt;">
             <thead>
                 <tr style="background-color: #f5f5f5;">
@@ -300,7 +311,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($payment->partialPayments as $index => $partial)
+                @foreach($partialPayments as $index => $partial)
                 <tr>
                     <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ $index + 1 }}</td>
                     <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">PAY-{{ str_pad($partial->id, 5, '0', STR_PAD_LEFT) }}</td>
@@ -319,21 +330,19 @@
                 @endforeach
                 <tr style="font-weight: bold; background-color: #f9f9f9;">
                     <td colspan="3" style="border: 1px solid #ddd; padding: 8px; text-align: right;">إجمالي الدفعات:</td>
-                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><span class="currency">{{ number_format($payment->partialPayments->sum('amount'), 2) }}</span></td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><span class="currency">{{ number_format($partialPayments->sum('amount'), 2) }}</span></td>
                     <td style="border: 1px solid #ddd; padding: 8px;"></td>
                 </tr>
             </tbody>
         </table>
     </div>
 @else
-    <div style="margin-top: 15px; color: #777; font-style: italic;">
-        لا توجد دفعات مسجلة لهذه الفاتورة
+    <div style="margin-top: 15px; color: #777;">
+        لا توجد دفعات مسجلة لهذه الفاتورة.
     </div>
 @endif
 
-        @if(!$loop->last)
-            <div style="page-break-after: always;"></div>
-        @endif
+     
     @endif
     @endforeach
 

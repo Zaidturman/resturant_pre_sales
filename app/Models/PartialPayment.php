@@ -22,9 +22,8 @@ class PartialPayment extends Model
 // علاقة مع الفاتورة
 public function invoices()
 {
-    return $this->belongsToMany(Invoice::class, 'invoice_partial_payment')
-                ->withPivot('amount')
-                ->withTimestamps();
+    return $this->belongsToMany(Invoice::class, 'invoice_partial_payment', 'partial_payment_id', 'invoice_id')
+                ->withPivot('amount');
 }
     // إنشاء علاقة الربط مع نموذج Customer
     public function customer()

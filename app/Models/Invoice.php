@@ -17,7 +17,7 @@ class Invoice extends Model
 
 public function partialPayments()
 {
-    return $this->hasMany(PartialPayment::class, 'invoice_id');
+    return $this->belongsToMany(PartialPayment::class, 'invoice_partial_payment', 'invoice_id', 'partial_payment_id');
 }
 
     public function invoice_details(){
