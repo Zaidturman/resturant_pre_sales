@@ -96,7 +96,12 @@
                         <li><a href="{{route('daily.invoice.report')}}">تقرير الفواتير اليومية</a></li>
                     </ul>
                 </li>
-
+  <li>
+                    <a href="{{ route('quotation.index') }}" class="waves-effect">
+                        <i class="ri-dashboard-line"></i>
+                        <span>عروض الاسعار</span>
+                    </a>
+                </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-wallet-3-fill"></i>

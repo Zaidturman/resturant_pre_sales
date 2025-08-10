@@ -32,6 +32,9 @@ use App\Http\Controllers\Pos\InvoiceController;
 use App\Http\Controllers\Pos\PartialPaymentController;
 use App\Http\Controllers\Pos\SalaryController;
 use App\Http\Controllers\Pos\StockController;
+use App\Http\Controllers\Pos\QuotationController;
+use App\Http\Controllers\Pos\OrderController;
+
 use App\Models\Employee;
 use App\Models\Expense;
 
@@ -251,7 +254,21 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/delete/unit/{id}', 'DeleteUnit')->name('unit.delete');
     });
+    Route::controller(QuotationController::class)->group(function () {
+        Route::get('/quotation/all', 'index')->name('quotation.index');  // Fixed path
+        Route::get('/quotation/add', 'create')->name('quotation.add');
+        Route::post('/quotation/store', 'store')->name('quotation.store');
+        Route::get('/quotation/print/{id}', 'print')->name('quotation.print');
+        Route::get('/quotation/convert/order/{id}', 'convertToOrder')->name('quotation.convert.order');
+    });
 
+    // Order Routes - Fixed  
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('/order/all', 'index')->name('order.index');  // Fixed path
+        Route::get('/order/add', 'create')->name('order.add');
+        Route::post('/order/store', 'store')->name('order.store');
+        Route::get('/order/convert/invoice/{id}', 'convertToInvoice')->name('order.convert.invoice');
+    });
     // Category All route
     Route::controller(CategoryController::class)->group(function () {
         Route::get('/category/all', 'CategoryAll')->name('category.all');
