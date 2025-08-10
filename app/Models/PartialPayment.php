@@ -11,13 +11,14 @@ class PartialPayment extends Model
 
     // تحديد الأعمدة التي يمكن ملؤها
     protected $fillable = [
-        'customer_id',
+       'customer_id',
         'amount',
-    'invoice_id', // إضافة هذا
-
-        'payment_date',
-         'discount_amount',
+        'discount_amount',
+        'net_amount',
         'payment_method',
+        'payment_date',
+        'notes',
+        'applied_invoices' // optional: if you store comma-separated invoice IDs
     ];
 // علاقة مع الفاتورة
 public function invoices()

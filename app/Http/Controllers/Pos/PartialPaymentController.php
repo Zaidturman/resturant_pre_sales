@@ -49,6 +49,7 @@ class PartialPaymentController extends Controller
             'notes' => $request->notes
         ]);
 
+
         // تطبيق الدفعة على الفواتير
         $this->applyPaymentToInvoices($payment, $netAmount );
 
@@ -146,7 +147,11 @@ class PartialPaymentController extends Controller
         $invoice->save();
 
         // ربط الدفعة بالفاتورة مع المبلغ المطبق
-        $payment->invoices()->attach($invoice->invoice_id, ['amount' => $paymentAmount]);
+        $payment->invoices()->attach($invoice->invoice_id, [
+    'amount' => $paymentAmount,
+    'created_at' => now(),
+    'updated_at' => now(),
+]);
         $appliedInvoices->push($invoice->invoice_id);
 
         $amount -= $paymentAmount;
