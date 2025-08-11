@@ -54,10 +54,7 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
 
-                                                        <a href="{{ route('quotation.edit', $quotation->id) }}"
-                                                            class="btn btn-sm btn-primary" title="تعديل">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
+
 
                                                         <a href="{{ route('quotation.print', $quotation->id) }}"
                                                             class="btn btn-sm btn-secondary" title="طباعة" target="_blank">
@@ -74,7 +71,6 @@
                                                         <form action="{{ route('quotation.delete', $quotation->id) }}"
                                                             method="POST" class="d-inline">
                                                             @csrf
-                                                            @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-danger"
                                                                 title="حذف" onclick="return confirm('هل أنت متأكد؟')">
                                                                 <i class="fas fa-trash"></i>

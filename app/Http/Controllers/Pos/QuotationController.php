@@ -194,11 +194,26 @@ class QuotationController extends Controller
         return redirect()->route('backend.order.index')->with('success', 'تم تحويل عرض السعر إلى طلبية بنجاح');
     }
 
+
     public function print($id)
     {
         $quotation = Quotation::with('customer', 'quotationDetails.product')->findOrFail($id);
-        $pdf = PDF::loadView('backend.pdf.quotation_pdf', compact('quotation'));
-        return $pdf->stream('quotation_' . $quotation->quotation_no . '.pdf');
+
+        $filename = 'عرض سعر_' . str_replace(['/', '\\'], '-', $quotation->quotation_no) . '.pdf';
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'orientation' => 'P',
+            'default_font' => 'dejavusans',
+            'default_font_size' => 12,
+            'directionality' => 'rtl'
+        ]);
+
+        $html = view('backend.quotation.quotation_pdf', compact('quotation'))->render();
+        $mpdf->WriteHTML($html);
+
+        return $mpdf->Output($filename, 'I'); // عرض في المتصفح
     }
 
     public function approve($id)

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>عرض سعر #{{ $quotation->quotation_no }}</title>
@@ -8,34 +9,43 @@
             font-family: 'Arial', sans-serif;
             direction: rtl;
         }
+
         .header {
             text-align: center;
             margin-bottom: 20px;
             border-bottom: 2px solid #333;
             padding-bottom: 10px;
         }
+
         .company-info {
             margin-bottom: 30px;
         }
+
         .quotation-info {
             margin-bottom: 30px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: right;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .total-row {
             font-weight: bold;
         }
+
         .footer {
             margin-top: 50px;
             text-align: center;
@@ -43,6 +53,7 @@
             border-top: 1px solid #333;
             padding-top: 10px;
         }
+
         .signature {
             margin-top: 50px;
             display: flex;
@@ -50,6 +61,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>عرض سعر</h1>
@@ -57,9 +69,9 @@
     </div>
 
     <div class="company-info">
-        <p><strong>العنوان:</strong> عنوان الشركة هنا</p>
-        <p><strong>الهاتف:</strong> 123456789</p>
-        <p><strong>البريد الإلكتروني:</strong> info@company.com</p>
+        <p><strong>العنوان:</strong> </p>
+        <p><strong>الهاتف:</strong> </p>
+        <p><strong>البريد الإلكتروني:</strong> </p>
     </div>
 
     <div class="quotation-info">
@@ -87,14 +99,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($quotation->quotationDetails as $detail)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $detail->product->name }}</td>
-                <td>{{ $detail->quantity }}</td>
-                <td>{{ number_format($detail->unit_price, 2) }}</td>
-                <td>{{ number_format($detail->total_price, 2) }}</td>
-            </tr>
+            @foreach ($quotation->quotationDetails as $detail)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $detail->product->name }}</td>
+                    <td>{{ $detail->quantity }}</td>
+                    <td>{{ number_format($detail->unit_price, 2) }}</td>
+                    <td>{{ number_format($detail->total_price, 2) }}</td>
+                </tr>
             @endforeach
         </tbody>
         <tfoot>
@@ -102,11 +114,11 @@
                 <td colspan="4" style="text-align: left;">المجموع</td>
                 <td>{{ number_format($quotation->total_amount + $quotation->discount_amount, 2) }}</td>
             </tr>
-            @if($quotation->discount_amount > 0)
-            <tr class="total-row">
-                <td colspan="4" style="text-align: left;">الخصم</td>
-                <td>{{ number_format($quotation->discount_amount, 2) }}</td>
-            </tr>
+            @if ($quotation->discount_amount > 0)
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: left;">الخصم</td>
+                    <td>{{ number_format($quotation->discount_amount, 2) }}</td>
+                </tr>
             @endif
             <tr class="total-row">
                 <td colspan="4" style="text-align: left;">الإجمالي النهائي</td>
@@ -136,4 +148,5 @@
         <p>هذا العرض ساري حتى {{ $quotation->valid_until }}</p>
     </div>
 </body>
+
 </html>
