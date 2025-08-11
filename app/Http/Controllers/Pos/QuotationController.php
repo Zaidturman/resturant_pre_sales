@@ -8,6 +8,8 @@ use App\Models\QuotationDetail;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
@@ -88,6 +90,7 @@ class QuotationController extends Controller
         return view('backend.quotation.show', compact('quotation'));
     } */
 
+
     public function edit($id)
     {
         $quotation = Quotation::with('quotationDetails.product')->findOrFail($id);
@@ -158,32 +161,37 @@ class QuotationController extends Controller
     {
         $quotation = Quotation::with('quotationDetails.product')->findOrFail($id);
 
-        // إنشاء طلبية من عرض السعر
-        $order = Order::create([
-            'order_no' => 'ORD-' . time(),
-            'customer_id' => $quotation->customer_id,
-            'date' => now(),
-            'description' => 'تحويل من عرض سعر #' . $quotation->quotation_no,
-            'total_amount' => $quotation->total_amount,
-            'discount_amount' => $quotation->discount_amount,
-            'status' => 'pending',
-            'created_by' => Auth::id(),
-        ]);
+        DB::transaction(function () use ($quotation) {
+            // إنشاء رقم طلبية متسلسل (اختياري: يمكنك استخدام time() أو رقم متسلسل)
+            $lastOrder = Order::latest()->first();
+            $orderNo = $lastOrder ? $lastOrder->order_no + 1 : 1;
 
-        foreach ($quotation->quotationDetails as $detail) {
-            OrderDetail::create([
-                'order_id' => $order->id,
-                'product_id' => $detail->product_id,
-                'category_id' => $detail->category_id,
-                'quantity' => $detail->quantity,
-                'unit_price' => $detail->unit_price,
-                'total_price' => $detail->total_price,
+            $order = Order::create([
+                'order_no' => $orderNo,
+                'customer_id' => $quotation->customer_id,
+                'date' => now(),
+                'description' => 'تحويل من عرض سعر #' . $quotation->quotation_no,
+                'total_amount' => $quotation->total_amount,
+                'discount_amount' => $quotation->discount_amount ?? 0,
+                'status' => 'pending',
+                'created_by' => Auth::id(),
             ]);
-        }
 
-        $quotation->update(['status' => 'converted']);
+            foreach ($quotation->quotationDetails as $detail) {
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'product_id' => $detail->product_id,
+                    'category_id' => $detail->category_id,
+                    'quantity' => $detail->quantity,
+                    'unit_price' => $detail->unit_price,
+                    'total_price' => $detail->total_price,
+                ]);
+            }
 
-        return redirect()->route('order.edit', $order->id)->with('success', 'تم تحويل عرض السعر إلى طلبية');
+            $quotation->update(['status' => 'converted']);
+        });
+
+        return redirect()->route('backend.order.index')->with('success', 'تم تحويل عرض السعر إلى طلبية بنجاح');
     }
 
     public function print($id)
@@ -206,4 +214,41 @@ class QuotationController extends Controller
         $quotation->update(['status' => 'rejected']);
         return redirect()->back()->with('success', 'تم رفض عرض السعر بنجاح');
     }
+    /* public function convertToOrder($id)
+    {
+        $quotation = Quotation::with('quotationDetails.product')->findOrFail($id);
+
+        // إنشاء رقم طلبية فريد
+        $lastOrder = Order::latest()->first();
+        $orderNo = $lastOrder ? $lastOrder->order_no + 1 : 1;
+
+        DB::transaction(function () use ($quotation, $orderNo) {
+            $order = Order::create([
+                'order_no' => $orderNo,
+                'customer_id' => $quotation->customer_id,
+                'date' => now()->format('Y-m-d'),
+                'description' => 'تحويل من عرض سعر #' . $quotation->quotation_no,
+                'total_amount' => $quotation->total_amount,
+                'discount_amount' => $quotation->discount_amount,
+                'status' => 'pending',
+                'created_by' => Auth::id(),
+            ]);
+
+            foreach ($quotation->quotationDetails as $detail) {
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'product_id' => $detail->product_id,
+                    'category_id' => $detail->category_id,
+                    'quantity' => $detail->quantity,
+                    'unit_price' => $detail->unit_price,
+                    'total_price' => $detail->total_price,
+                ]);
+            }
+
+            // تحديث حالة العرض
+            $quotation->update(['status' => 'converted']);
+        });
+
+        return redirect()->route('order.edit', $order->id)->with('success', 'تم تحويل عرض السعر إلى طلبية بنجاح');
+    } */
 }

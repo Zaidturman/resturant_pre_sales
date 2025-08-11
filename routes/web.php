@@ -254,15 +254,21 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/delete/unit/{id}', 'DeleteUnit')->name('unit.delete');
     });
+
     Route::controller(QuotationController::class)->group(function () {
-        Route::get('/quotation/all', 'index')->name('quotation.index');  // Fixed path
+        Route::get('/quotation/all', 'index')->name('quotation.index');
         Route::get('/quotation/add', 'create')->name('quotation.add');
-        Route::get('/quotations/{id}', 'show')
-            ->name('quotation.show');
+        Route::get('/quotation/{id}', 'show')->name('quotation.show');
+        Route::get('/quotation/edit/{id}', 'edit')->name('quotation.edit');
+        Route::post('/quotation/update/{id}', 'update')->name('quotation.update');
+        Route::post('/quotation/delete/{id}', 'destroy')->name('quotation.delete');
+
+        Route::post('/quotation/approve/{id}', 'approve')->name('quotation.approve');
+        Route::post('/quotation/reject/{id}', 'reject')->name('quotation.reject');
+        Route::get('/quotation/convert/order/{id}', 'convertToOrder')->name('quotation.convert.order');
+        Route::get('/quotation/print/{id}', 'print')->name('quotation.print');
 
         Route::post('/quotation/store', 'store')->name('quotation.store');
-        Route::get('/quotation/print/{id}', 'print')->name('quotation.print');
-        Route::get('/quotation/convert/order/{id}', 'convertToOrder')->name('quotation.convert.order');
     });
 
     // Order Routes - Fixed  

@@ -47,25 +47,32 @@
                                                     @endif
                                                 </td>
                                                 <td>
+
                                                     <div class="d-flex gap-2">
                                                         <a href="{{ route('quotation.show', $quotation->id) }}"
                                                             class="btn btn-sm btn-info" title="عرض">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        {{-- <a href="" class="btn btn-sm btn-primary" title="تعديل">
+
+                                                        <a href="{{ route('quotation.edit', $quotation->id) }}"
+                                                            class="btn btn-sm btn-primary" title="تعديل">
                                                             <i class="fas fa-edit"></i>
-                                                        </a> --}}
-                                                        <a href="" class="btn btn-sm btn-secondary" title="طباعة"
-                                                            target="_blank">
+                                                        </a>
+
+                                                        <a href="{{ route('quotation.print', $quotation->id) }}"
+                                                            class="btn btn-sm btn-secondary" title="طباعة" target="_blank">
                                                             <i class="fas fa-print"></i>
                                                         </a>
+
                                                         @if ($quotation->status == 'approved')
-                                                            <a href="" class="btn btn-sm btn-success"
-                                                                title="تحويل لطلبية">
+                                                            <a href="{{ route('quotation.convert.order', $quotation->id) }}"
+                                                                class="btn btn-sm btn-success" title="تحويل لطلبية">
                                                                 <i class="fas fa-exchange-alt"></i>
                                                             </a>
                                                         @endif
-                                                        <form action="" method="POST" class="d-inline">
+
+                                                        <form action="{{ route('quotation.delete', $quotation->id) }}"
+                                                            method="POST" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-danger"
@@ -75,6 +82,7 @@
                                                         </form>
                                                     </div>
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>

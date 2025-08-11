@@ -97,13 +97,15 @@
 
                                     <div class="btn-group">
                                         @if ($quotation->status == 'pending')
-                                            <form action="" method="POST" class="d-inline">
+                                            <form action="{{ route('quotation.approve', $quotation->id) }}" method="POST"
+                                                class="d-inline">
                                                 @csrf
                                                 <button type="submit" class="btn btn-success me-2">
                                                     <i class="fas fa-check-circle me-2"></i> اعتماد
                                                 </button>
                                             </form>
-                                            <form action="" method="POST" class="d-inline">
+                                            <form action="{{ route('quotation.reject', $quotation->id) }}" method="POST"
+                                                class="d-inline">
                                                 @csrf
                                                 <button type="submit" class="btn btn-danger me-2">
                                                     <i class="fas fa-times-circle me-2"></i> رفض
@@ -112,12 +114,14 @@
                                         @endif
 
                                         @if (in_array($quotation->status, ['pending', 'approved']))
-                                            <a href="" class="btn btn-info me-2">
+                                            <a href="{{ route('quotation.convert.order', $quotation->id) }}"
+                                                class="btn btn-info me-2">
                                                 <i class="fas fa-exchange-alt me-2"></i> تحويل لطلبية
                                             </a>
                                         @endif
 
-                                        <a href="" class="btn btn-primary">
+                                        <a href="{{ route('quotation.print', $quotation->id) }}" class="btn btn-primary"
+                                            target="_blank">
                                             <i class="fas fa-download me-2"></i> تحميل PDF
                                         </a>
                                     </div>
