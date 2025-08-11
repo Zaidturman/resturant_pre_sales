@@ -10,6 +10,8 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
+use App\Models\Payment;
+use App\Models\PaymentDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -210,32 +212,69 @@ class OrderController extends Controller
     {
         $order = Order::with('orderDetails.product')->findOrFail($id);
 
-        $invoice = Invoice::create([
-            'invoice_no' => 'INV-' . time(),
-            'customer_id' => $order->customer_id,
-            'date' => now(),
-            'description' => 'تحويل من طلبية #' . $order->order_no,
-            'total_amount' => $order->total_amount,
-            'discount_amount' => $order->discount_amount,
-            'status' => 'pending',
-            'created_by' => Auth::user()->id,
+        // حساب الإجمالي من التفاصيل (كما في InvoiceStore)
+        $totalAmount = $order->orderDetails->sum(function ($detail) {
+            return $detail->quantity * $detail->unit_price;
+        });
 
-        ]);
+        $discountAmount = $order->discount_amount ?? 0;
+        $totalAfterDiscount = $totalAmount - $discountAmount;
 
-        foreach ($order->orderDetails as $detail) {
-            InvoiceDetail::create([
-                'invoice_id' => $invoice->id,
-                'product_id' => $detail->product_id,
-                'category_id' => $detail->category_id,
-                'selling_qty' => $detail->quantity,
-                'unit_price' => $detail->unit_price,
-                'selling_price' => $detail->total_price,
+        // تحديد حالة الدفع بناءً على الطلب (افتراضًا "مستحق بالكامل" ما لم يُدفع شيء)
+        $paidStatus = 'full_due'; // افتراضيًا
+        $paidAmount = 0;
+        $dueAmount = $totalAfterDiscount;
+
+        // مثال: لو أردت دفع جزئي أو كامل، يمكنك تعديل الشرط لاحقًا
+        // لكن في التحويل، غالبًا نبدأ بـ "مستحق" حتى يُدخل المستخدم الدفع
+
+        DB::transaction(function () use ($order, $totalAmount, $totalAfterDiscount, $discountAmount, $paidStatus, $paidAmount, $dueAmount) {
+            // إنشاء الفاتورة
+            $invoice = Invoice::create([
+                'invoice_no' => 'INV-' . time(),
+                'date' => now(),
+                'description' => 'تحويل من طلبية #' . $order->order_no,
+                'discount_amount' => $discountAmount,
+                'status' => '1', // نشطة
+                'created_by' => Auth::user()->id,
             ]);
-        }
 
-        $order->update(['status' => 'converted']);
+            // إنشاء تفاصيل الفاتورة
+            foreach ($order->orderDetails as $detail) {
+                InvoiceDetail::create([
+                    'invoice_id' => $invoice->id,
+                    'category_id' => $detail->category_id,
+                    'product_id' => $detail->product_id,
+                    'selling_qty' => $detail->quantity,
+                    'unit_price' => $detail->unit_price,
+                    'selling_price' => $detail->quantity * $detail->unit_price,
+                    'status' => '1',
+                ]);
+            }
 
-        return redirect()->route('invoice.edit', $invoice->id)->with('success', 'تم تحويل الطلبية إلى فاتورة');
+            // إنشاء سجل الدفع
+            $payment = new Payment();
+            $payment->invoice_id = $invoice->id;
+            $payment->customer_id = $order->customer_id;
+            $payment->paid_status = $paidStatus;
+            $payment->total_amount = $totalAfterDiscount;
+            $payment->discount_amount = $discountAmount;
+            $payment->paid_amount = $paidAmount;
+            $payment->due_amount = $dueAmount;
+            $payment->save();
+
+            // إنشاء تفاصيل الدفع (للتاريخ الأول)
+            PaymentDetail::create([
+                'invoice_id' => $invoice->id,
+                'date' => now(),
+                'current_paid_amount' => $paidAmount,
+            ]);
+
+            // تحديث حالة الطلب
+            $order->update(['status' => 'converted']);
+        });
+
+        return redirect()->route('invoice.all')->with('success', 'تم تحويل الطلبية إلى فاتورة بنجاح');
     }
 
     /**

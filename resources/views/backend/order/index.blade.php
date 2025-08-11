@@ -52,11 +52,11 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
 
-                                                        <!-- تعديل -->
+                                                        {{--   <!-- تعديل -->
                                                         <a href="{{ route('order.edit', $order->id) }}"
                                                             class="btn btn-sm btn-primary" title="تعديل">
                                                             <i class="fas fa-edit"></i>
-                                                        </a>
+                                                        </a> --}}
 
                                                         <!-- طباعة -->
                                                         <a href="{{ route('order.print', $order->id) }}"

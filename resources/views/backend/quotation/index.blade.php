@@ -52,9 +52,9 @@
                                                             class="btn btn-sm btn-info" title="عرض">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="" class="btn btn-sm btn-primary" title="تعديل">
+                                                        {{-- <a href="" class="btn btn-sm btn-primary" title="تعديل">
                                                             <i class="fas fa-edit"></i>
-                                                        </a>
+                                                        </a> --}}
                                                         <a href="" class="btn btn-sm btn-secondary" title="طباعة"
                                                             target="_blank">
                                                             <i class="fas fa-print"></i>
