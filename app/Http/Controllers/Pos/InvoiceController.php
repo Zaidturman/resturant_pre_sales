@@ -229,7 +229,8 @@ class InvoiceController extends Controller
             $invoice_no = $firstReg + 1;
         } else {
             $invoice_data = Invoice::orderBy('id', 'desc')->first()->invoice_no;
-            $invoice_no = $invoice_data + 1;
+            $invoice_no = (int)$invoice_data + 1; // Cast to integer before adding
+
         }
 
         date_default_timezone_set('Asia/Hebron');
@@ -248,7 +249,7 @@ class InvoiceController extends Controller
             $invoice_no = $firstReg + 1;
         } else {
             $invoice_data = Invoice::orderBy('id', 'desc')->first()->invoice_no;
-            $invoice_no = $invoice_data + 1;
+            $invoice_no = (int)$invoice_data + 1; // Cast to integer before adding
         }
 
         date_default_timezone_set('Asia/Hebron');
@@ -469,14 +470,14 @@ class InvoiceController extends Controller
         $createdById = $invoice->created_by;
         // استرجاع المستخدم الذي أنشأ الفاتورة
         $creator = User::find($createdById);
-        $partialPayments = PartialPayment::whereHas('invoices', function($query) use ($id) {
+        $partialPayments = PartialPayment::whereHas('invoices', function ($query) use ($id) {
             $query->where('invoice_id', $id);
         })
-        ->with(['invoices' => function($query) use ($id) {
-            $query->where('invoice_id', $id);
-        }])
-        ->orderBy('payment_date', 'asc')
-        ->get();
+            ->with(['invoices' => function ($query) use ($id) {
+                $query->where('invoice_id', $id);
+            }])
+            ->orderBy('payment_date', 'asc')
+            ->get();
         // الحصول على اسم المستخدم
         // تعريف طرق الدفع المتاحة
         $paymentMethods = [
@@ -490,7 +491,7 @@ class InvoiceController extends Controller
         $invoice->payment_method_name = $paymentMethods[$invoice->payment_method] ?? $invoice->payment_method;
 
         $creatorName =  $creator->name;
-        return view('backend.pdf.invoice_pdf', compact('invoice', 'creatorName','partialPayments'));
+        return view('backend.pdf.invoice_pdf', compact('invoice', 'creatorName', 'partialPayments'));
     }
 
     public function DailyInvoiceReport()
