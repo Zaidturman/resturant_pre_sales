@@ -44,7 +44,7 @@ class QuotationController extends Controller
             'unit_price' => 'required|array',
         ]);
 
-        DB::transaction(function() use($request) {
+        DB::transaction(function () use ($request) {
             $totalAmount = 0;
             foreach ($request->quantity as $index => $qty) {
                 $totalAmount += $qty * $request->unit_price[$index];
@@ -83,6 +83,10 @@ class QuotationController extends Controller
         $quotation = Quotation::with(['customer', 'quotationDetails.product'])->findOrFail($id);
         return view('backend.quotation.show', compact('quotation'));
     }
+    /*  public function show(Quotation $quotation)
+    {
+        return view('backend.quotation.show', compact('quotation'));
+    } */
 
     public function edit($id)
     {
@@ -90,7 +94,7 @@ class QuotationController extends Controller
         $customers = Customer::all();
         $products = Product::all();
         $categories = Category::all();
-        
+
         return view('backend.quotation.edit', compact('quotation', 'customers', 'products', 'categories'));
     }
 
@@ -105,12 +109,12 @@ class QuotationController extends Controller
             'unit_price' => 'required|array',
         ]);
 
-        DB::transaction(function() use($request, $id) {
+        DB::transaction(function () use ($request, $id) {
             $quotation = Quotation::findOrFail($id);
-            
+
             // حذف التفاصيل القديمة
             QuotationDetail::where('quotation_id', $quotation->id)->delete();
-            
+
             $totalAmount = 0;
             foreach ($request->quantity as $index => $qty) {
                 $totalAmount += $qty * $request->unit_price[$index];
@@ -146,7 +150,7 @@ class QuotationController extends Controller
         $quotation = Quotation::findOrFail($id);
         QuotationDetail::where('quotation_id', $quotation->id)->delete();
         $quotation->delete();
-        
+
         return redirect()->route('quotation.index')->with('success', 'تم حذف عرض السعر بنجاح');
     }
 
@@ -186,7 +190,7 @@ class QuotationController extends Controller
     {
         $quotation = Quotation::with('customer', 'quotationDetails.product')->findOrFail($id);
         $pdf = PDF::loadView('backend.pdf.quotation_pdf', compact('quotation'));
-        return $pdf->stream('quotation_'.$quotation->quotation_no.'.pdf');
+        return $pdf->stream('quotation_' . $quotation->quotation_no . '.pdf');
     }
 
     public function approve($id)

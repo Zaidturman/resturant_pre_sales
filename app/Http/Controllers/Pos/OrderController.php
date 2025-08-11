@@ -185,8 +185,22 @@ class OrderController extends Controller
     public function print($id)
     {
         $order = Order::with(['customer', 'orderDetails.product'])->findOrFail($id);
-        $pdf = Pdf::loadView('backend.pdf.order_pdf', compact('order'));
-        return $pdf->stream('طلبية_' . $order->order_no . '.pdf');
+
+        $filename = 'طلبية_' . str_replace(['/', '\\'], '-', $order->order_no) . '.pdf';
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'orientation' => 'P',
+            'default_font' => 'dejavusans',
+            'default_font_size' => 12,
+            'directionality' => 'rtl'
+        ]);
+
+        $html = view('backend.order.order_pdf', compact('order'))->render();
+        $mpdf->WriteHTML($html);
+
+        return $mpdf->Output($filename, 'I'); // عرض في المتصفح
     }
 
     /**
@@ -205,7 +219,7 @@ class OrderController extends Controller
             'discount_amount' => $order->discount_amount,
             'status' => 'pending',
             'created_by' => Auth::user()->id,
-            
+
         ]);
 
         foreach ($order->orderDetails as $detail) {

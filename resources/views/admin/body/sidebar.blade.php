@@ -1,4 +1,3 @@
-
 <div class="vertical-menu">
 
     <div data-simplebar class="h-100">
@@ -8,7 +7,7 @@
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">القائمة</li>
-                
+
 
                 <li>
                     <a href="{{ route('dashboard') }}" class="waves-effect">
@@ -23,8 +22,8 @@
                         <span>ادارة الموردين</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('supplier.all')}}">جميع الموردين</a></li>
-                        <li><a href="{{route('supplier.credit')}}">مستحقات الموردين</a></li>
+                        <li><a href="{{ route('supplier.all') }}">جميع الموردين</a></li>
+                        <li><a href="{{ route('supplier.credit') }}">مستحقات الموردين</a></li>
 
                     </ul>
                 </li>
@@ -35,10 +34,10 @@
                         <span>ادارة الزبائن</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('customer.all')}}">جميع الزبائن</a></li>
-                        <li><a href="{{route('credit.customer')}}">ديون الزبائن</a></li>
-                        <li><a href="{{route('paid.customer')}}">مدفوعات الزبائن</a></li>
-                        <li><a href="{{route('customer.wise.report')}}">تقرير حسب العملاء</a></li>
+                        <li><a href="{{ route('customer.all') }}">جميع الزبائن</a></li>
+                        <li><a href="{{ route('credit.customer') }}">ديون الزبائن</a></li>
+                        <li><a href="{{ route('paid.customer') }}">مدفوعات الزبائن</a></li>
+                        <li><a href="{{ route('customer.wise.report') }}">تقرير حسب العملاء</a></li>
                     </ul>
                 </li>
 
@@ -48,7 +47,7 @@
                         <span>ادارة الوحدات</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('unit.all')}}">جميع الوحدات</a></li>
+                        <li><a href="{{ route('unit.all') }}">جميع الوحدات</a></li>
                     </ul>
                 </li>
 
@@ -58,7 +57,7 @@
                         <span>ادارة الفئات</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('category.all')}}">جميع الفئات </a></li>
+                        <li><a href="{{ route('category.all') }}">جميع الفئات </a></li>
                     </ul>
                 </li>
 
@@ -68,7 +67,7 @@
                         <span>ادارة البضائع</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('product.all')}}">جميع البضائع</a></li>
+                        <li><a href="{{ route('product.all') }}">جميع البضائع</a></li>
                     </ul>
                 </li>
 
@@ -78,9 +77,9 @@
                         <span>ادارة المشتريات </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('purchase.all')}}">جميع المشتريات </a></li>
-                        <li><a href="{{route('purchase.pending')}}">الموافقة على المشتريات </a></li>
-                        <li><a href="{{route('daily.purchase.report')}}">تقرير المشتريات اليومية </a></li>
+                        <li><a href="{{ route('purchase.all') }}">جميع المشتريات </a></li>
+                        <li><a href="{{ route('purchase.pending') }}">الموافقة على المشتريات </a></li>
+                        <li><a href="{{ route('daily.purchase.report') }}">تقرير المشتريات اليومية </a></li>
                     </ul>
                 </li>
 
@@ -91,21 +90,21 @@
                         <span>ادارة الفواتير</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('invoice.all')}}">جميع الفواتير</a></li>
-                        <li><a href="{{route('print.invoiceList')}}">طباعة فاتورة </a></li>
-                        <li><a href="{{route('daily.invoice.report')}}">تقرير الفواتير اليومية</a></li>
+                        <li><a href="{{ route('invoice.all') }}">جميع الفواتير</a></li>
+                        <li><a href="{{ route('print.invoiceList') }}">طباعة فاتورة </a></li>
+                        <li><a href="{{ route('daily.invoice.report') }}">تقرير الفواتير اليومية</a></li>
                     </ul>
                 </li>
-  <li>
+                <li>
                     <a href="{{ route('quotation.index') }}" class="waves-effect">
-                        <i class="ri-dashboard-line"></i>
+                        <i class="ri-file-list-3-line"></i>
                         <span>عروض الاسعار</span>
                     </a>
                 </li>
 
-                  <li>
+                <li>
                     <a href="{{ route('order.index') }}" class="waves-effect">
-                        <i class="ri-dashboard-line"></i>
+                        <i class="ri-shopping-bag-3-line"></i>
                         <span>الطلبيات </span>
                     </a>
                 </li>
@@ -115,13 +114,13 @@
                         <span>ادارة المصاريف</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('expense.all')}}">جميع المصاريف</a></li>
-                        <li><a href="{{route('expense.category')}}">فئات المصاريف </a></li>
-                        <li><a href="{{route('expense.create')}}">اضافة المصاريف </a></li>
+                        <li><a href="{{ route('expense.all') }}">جميع المصاريف</a></li>
+                        <li><a href="{{ route('expense.category') }}">فئات المصاريف </a></li>
+                        <li><a href="{{ route('expense.create') }}">اضافة المصاريف </a></li>
 
-                        <li><a href="{{route('expense.printList')}}">طباعة المصاريف </a></li>
+                        <li><a href="{{ route('expense.printList') }}">طباعة المصاريف </a></li>
 
-                        <li><a href="{{route('daily.expense.report')}}">تقرير المصاريف اليومية</a></li>
+                        <li><a href="{{ route('daily.expense.report') }}">تقرير المصاريف اليومية</a></li>
                     </ul>
                 </li>
                 <li class="menu-title">الموظفين</li>
@@ -132,11 +131,11 @@
                         <span>ادارة الموظفين</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{route('employee.index')}}">جميع الموظفيين</a></li>
-                        <li><a href="{{route('employee.salares')}}">الرواتب</a></li>
-                        <li><a href="{{route('attendance.index')}}"> الحضور والغياب </a></li>
+                        <li><a href="{{ route('employee.index') }}">جميع الموظفيين</a></li>
+                        <li><a href="{{ route('employee.salares') }}">الرواتب</a></li>
+                        <li><a href="{{ route('attendance.index') }}"> الحضور والغياب </a></li>
 
-                        <li><a href="{{route('employee.report')}}">تقرير الموظفين اليومية</a></li>
+                        <li><a href="{{ route('employee.report') }}">تقرير الموظفين اليومية</a></li>
                     </ul>
                 </li>
 
@@ -234,7 +233,7 @@
                     <li><a href="{{route('contact.message')}}">Contact Message</a></li>
                 </ul>
             </li> --}}
-            <!-- Page Layout End -->
+                <!-- Page Layout End -->
 
 
 

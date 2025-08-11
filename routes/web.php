@@ -257,28 +257,31 @@ Route::middleware('auth')->group(function () {
     Route::controller(QuotationController::class)->group(function () {
         Route::get('/quotation/all', 'index')->name('quotation.index');  // Fixed path
         Route::get('/quotation/add', 'create')->name('quotation.add');
+        Route::get('/quotations/{id}', 'show')
+            ->name('quotation.show');
+
         Route::post('/quotation/store', 'store')->name('quotation.store');
         Route::get('/quotation/print/{id}', 'print')->name('quotation.print');
         Route::get('/quotation/convert/order/{id}', 'convertToOrder')->name('quotation.convert.order');
     });
 
     // Order Routes - Fixed  
-   // Order Routes - كاملة ومكتملة
-Route::controller(OrderController::class)->group(function () {
-    Route::get('/order/all', 'index')->name('order.index');
-    Route::get('/order/add', 'create')->name('order.add');
-    Route::post('/order/store', 'store')->name('order.store');
-    
-    // الروايات الناقصة التي يجب إضافتها
-    Route::get('/order/show/{id}', 'show')->name('order.show');
-    Route::get('/order/edit/{id}', 'edit')->name('order.edit');
-    Route::put('/order/update/{id}', 'update')->name('order.update');
-    Route::delete('/order/delete/{id}', 'destroy')->name('order.delete');
-    Route::get('/order/print/{id}', 'print')->name('order.print');
-    Route::get('/order/convert/invoice/{id}', 'convertToInvoice')->name('order.convert.invoice');
-    Route::get('/order/approve/{id}', 'approve')->name('order.approve');
-    Route::get('/order/reject/{id}', 'reject')->name('order.reject');
-});
+    // Order Routes - كاملة ومكتملة
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('/order/all', 'index')->name('order.index');
+        Route::get('/order/add', 'create')->name('order.add');
+        Route::post('/order/store', 'store')->name('order.store');
+
+        // الروايات الناقصة التي يجب إضافتها
+        Route::get('/order/show/{id}', 'show')->name('order.show');
+        Route::get('/order/edit/{id}', 'edit')->name('order.edit');
+        Route::put('/order/update/{id}', 'update')->name('order.update');
+        Route::delete('/order/delete/{id}', 'destroy')->name('order.delete');
+        Route::get('/order/print/{id}', 'print')->name('order.print');
+        Route::get('/order/convert/invoice/{id}', 'convertToInvoice')->name('order.convert.invoice');
+        Route::get('/order/approve/{id}', 'approve')->name('order.approve');
+        Route::get('/order/reject/{id}', 'reject')->name('order.reject');
+    });
     // Category All route
     Route::controller(CategoryController::class)->group(function () {
         Route::get('/category/all', 'CategoryAll')->name('category.all');

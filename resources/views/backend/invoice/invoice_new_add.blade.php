@@ -464,6 +464,18 @@
 
     <div class="page-content">
         <div class="container-fluid">
+            <div class="card-header  d-flex justify-content-around align-items-center">
+                <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                    <i class="ri-dashboard-line"></i>
+                    الرئيسية
+                </a>
+                <a href="{{ route('order.add') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> إنشاء طلبية
+                </a>
+                <a href="{{ route('quotation.add') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> إنشاء عرض سعر
+                </a>
+            </div>
             <div class="row">
                 <div class="col-12">
                     <div class="step-container">
@@ -1141,34 +1153,34 @@
         }
 
         // إضافة منتج للفاتورة
-    function addToInvoice(productId, quantity) {
-    // الحصول على معلومات المنتج
-    let product = null;
-    @foreach ($products as $product)
-        if ({{ $product->id }} == productId) {
-            product = {
-                id: {{ $product->id }},
-                name: '{{ $product->name }}',
-                category_id: {{ $product->category_id }},
-                price: parseFloat({{ $product->price }}), // السعر الأصلي
-                selling_price: parseFloat({{ $product->selling_price }}), // سعر البيع الحالي
-                quantity: quantity
-            };
+        function addToInvoice(productId, quantity) {
+            // الحصول على معلومات المنتج
+            let product = null;
+            @foreach ($products as $product)
+                if ({{ $product->id }} == productId) {
+                    product = {
+                        id: {{ $product->id }},
+                        name: '{{ $product->name }}',
+                        category_id: {{ $product->category_id }},
+                        price: parseFloat({{ $product->price }}), // السعر الأصلي
+                        selling_price: parseFloat({{ $product->selling_price }}), // سعر البيع الحالي
+                        quantity: quantity
+                    };
+                }
+            @endforeach
+
+            if (!product) return;
+
+            // التحقق من وجود المنتج في الفاتورة
+            if (invoiceItems[productId]) {
+                invoiceItems[productId].quantity = quantity;
+            } else {
+                invoiceItems[productId] = product;
+            }
+
+            rebuildInvoiceTable();
+            updateInvoiceTotal();
         }
-    @endforeach
-
-    if (!product) return;
-
-    // التحقق من وجود المنتج في الفاتورة
-    if (invoiceItems[productId]) {
-        invoiceItems[productId].quantity = quantity;
-    } else {
-        invoiceItems[productId] = product;
-    }
-
-    rebuildInvoiceTable();
-    updateInvoiceTotal();
-}
         // إزالة منتج من الفاتورة
         function removeFromInvoice(productId) {
             delete invoiceItems[productId];
@@ -1178,18 +1190,18 @@
         }
 
         // إعادة بناء جدول الفاتورة
-     function rebuildInvoiceTable() {
-    const tbody = document.getElementById('invoice-items');
-    tbody.innerHTML = '';
+        function rebuildInvoiceTable() {
+            const tbody = document.getElementById('invoice-items');
+            tbody.innerHTML = '';
 
-    Object.values(invoiceItems).forEach(function(item) {
-        const tr = document.createElement('tr');
-        tr.className = 'invoice-item';
-        tr.setAttribute('data-product-id', item.id);
+            Object.values(invoiceItems).forEach(function(item) {
+                const tr = document.createElement('tr');
+                tr.className = 'invoice-item';
+                tr.setAttribute('data-product-id', item.id);
 
-        const total = (item.quantity * (item.selling_price || item.price)).toFixed(2);
+                const total = (item.quantity * (item.selling_price || item.price)).toFixed(2);
 
-        tr.innerHTML = `
+                tr.innerHTML = `
             <input type="hidden" name="product_id[]" value="${item.id}">
             <input type="hidden" name="category_id[]" value="${item.category_id}">
             <td>${item.name}</td>
@@ -1218,9 +1230,9 @@
             </td>
         `;
 
-        tbody.appendChild(tr);
-    });
-}
+                tbody.appendChild(tr);
+            });
+        }
 
         // تحديث كمية المنتج في الفاتورة
         function updateInvoiceQuantity(productId, change) {
@@ -1240,13 +1252,13 @@
         }
 
         // تحديث سعر المنتج
-       function updateItemPrice(productId, newPrice) {
-    if (invoiceItems[productId]) {
-        invoiceItems[productId].selling_price = parseFloat(newPrice) || invoiceItems[productId].price;
-        rebuildInvoiceTable();
-        updateInvoiceTotal();
-    }
-}
+        function updateItemPrice(productId, newPrice) {
+            if (invoiceItems[productId]) {
+                invoiceItems[productId].selling_price = parseFloat(newPrice) || invoiceItems[productId].price;
+                rebuildInvoiceTable();
+                updateInvoiceTotal();
+            }
+        }
 
         // إزالة عنصر من الفاتورة
         function removeItemFromInvoice(productId) {
@@ -1270,21 +1282,21 @@
         }
 
         // تحديث الفاتورة الكلية
-       function updateInvoiceTotal() {
-    let subtotal = 0;
+        function updateInvoiceTotal() {
+            let subtotal = 0;
 
-    Object.values(invoiceItems).forEach(function(item) {
-        subtotal += item.quantity * (item.selling_price || item.price);
-    });
+            Object.values(invoiceItems).forEach(function(item) {
+                subtotal += item.quantity * (item.selling_price || item.price);
+            });
 
-    const discount = parseFloat($('#discount_amount').val()) || 0;
-    const total = subtotal - discount;
+            const discount = parseFloat($('#discount_amount').val()) || 0;
+            const total = subtotal - discount;
 
-    $('#subtotal-amount').text(subtotal.toFixed(2) + ' شيكل');
-    $('#discount-display').text(discount.toFixed(2) + ' شيكل');
-    $('#total-amount').text(total.toFixed(2) + ' شيكل');
-    $('#estimated_amount').val(total.toFixed(2));
-}
+            $('#subtotal-amount').text(subtotal.toFixed(2) + ' شيكل');
+            $('#discount-display').text(discount.toFixed(2) + ' شيكل');
+            $('#total-amount').text(total.toFixed(2) + ' شيكل');
+            $('#estimated_amount').val(total.toFixed(2));
+        }
 
         // تحديث الزر العائم
         function updateFloatingButton() {

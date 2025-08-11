@@ -10,7 +10,7 @@
             --order-light: #f8f9fa;
             --order-dark: #212529;
         }
-        
+
         .order-step-container {
             background: #fff;
             border-radius: 12px;
@@ -20,7 +20,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .order-step-container::before {
             content: '';
             position: absolute;
@@ -30,12 +30,12 @@
             height: 100%;
             background: var(--order-primary);
         }
-        
+
         .order-nav-tabs {
             border-bottom: 2px solid #eee;
             margin-bottom: 25px;
         }
-        
+
         .order-nav-tabs .nav-link {
             border: none;
             color: var(--order-secondary);
@@ -46,17 +46,17 @@
             font-size: 15px;
             border-radius: 0;
         }
-        
+
         .order-nav-tabs .nav-link:hover {
             color: var(--order-primary);
             background: var(--order-primary-light);
         }
-        
+
         .order-nav-tabs .nav-link.active {
             color: var(--order-primary);
             background: transparent;
         }
-        
+
         .order-nav-tabs .nav-link.active:after {
             content: '';
             position: absolute;
@@ -67,12 +67,12 @@
             background: var(--order-primary);
             border-radius: 3px 3px 0 0;
         }
-        
+
         .order-nav-tabs .nav-link i {
             margin-left: 8px;
             font-size: 16px;
         }
-        
+
         /* بطاقات الزبائن */
         .customer-card {
             transition: all 0.3s ease;
@@ -81,26 +81,26 @@
             overflow: hidden;
             height: 100%;
         }
-        
+
         .customer-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             border-color: var(--order-primary);
         }
-        
+
         .customer-card.selected {
             border: 2px solid var(--order-primary);
             background: var(--order-primary-light);
         }
-        
+
         .customer-avatar {
             transition: all 0.3s ease;
         }
-        
+
         .customer-card:hover .customer-avatar {
             transform: scale(1.1);
         }
-        
+
         /* بطاقات المنتجات */
         .product-card {
             background: #fff;
@@ -112,13 +112,13 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             border-color: var(--order-primary);
         }
-        
+
         .product-image {
             width: 100%;
             height: 120px;
@@ -126,7 +126,7 @@
             margin-bottom: 15px;
             border-radius: 5px;
         }
-        
+
         .product-quantity-control {
             display: flex;
             align-items: center;
@@ -134,7 +134,7 @@
             margin-top: auto;
             padding-top: 10px;
         }
-        
+
         .quantity-btn {
             width: 30px;
             height: 30px;
@@ -147,60 +147,60 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        
+
         .quantity-btn:hover {
             background: var(--order-primary);
             color: white;
         }
-        
+
         .quantity-display {
             min-width: 40px;
             text-align: center;
             font-weight: 600;
             margin: 0 5px;
         }
-        
+
         /* جدول الطلبية */
         .invoice-item {
             transition: all 0.3s ease;
         }
-        
+
         .invoice-item:hover {
             background: #f8f9fa;
         }
-        
+
         .input-group-quantity {
             max-width: 120px;
         }
-        
+
         .quantity-input {
             text-align: center;
             font-weight: 600;
         }
-        
+
         .remove-item {
             transition: all 0.2s ease;
         }
-        
+
         .remove-item:hover {
             transform: scale(1.1);
             color: var(--order-danger) !important;
         }
-        
+
         /* ملخص الطلبية */
         .invoice-summary {
             background: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
         }
-        
+
         .summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
             font-size: 15px;
         }
-        
+
         .summary-total {
             font-weight: 700;
             font-size: 18px;
@@ -209,7 +209,7 @@
             padding-top: 10px;
             border-top: 1px solid #dee2e6;
         }
-        
+
         /* الزر العائم */
         .floating-order-btn {
             position: fixed;
@@ -223,6 +223,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            border: none;
+
             font-size: 24px;
             box-shadow: 0 5px 20px rgba(25, 135, 84, 0.3);
             cursor: pointer;
@@ -231,17 +233,17 @@
             opacity: 0;
             transform: translateY(20px);
         }
-        
+
         .floating-order-btn.show {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         .floating-order-btn:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4);
         }
-        
+
         .order-badge {
             position: absolute;
             top: -5px;
@@ -257,7 +259,7 @@
             font-size: 12px;
             font-weight: bold;
         }
-        
+
         /* تأثيرات إضافية */
         .category-card {
             padding: 15px;
@@ -269,31 +271,32 @@
             margin-bottom: 15px;
             border: 1px solid #e9ecef;
         }
-        
-        .category-card:hover, .category-card.active {
+
+        .category-card:hover,
+        .category-card.active {
             background: var(--order-primary-light);
             color: var(--order-primary);
             border-color: var(--order-primary);
         }
-        
+
         .category-card h6 {
             margin-bottom: 0;
             font-weight: 600;
         }
-        
+
         /* مودال المنتج */
         .product-image-container {
             border: 1px solid #eee;
             border-radius: 10px;
             overflow: hidden;
         }
-        
+
         @media (max-width: 768px) {
             .order-nav-tabs .nav-link {
                 padding: 10px 15px;
                 font-size: 14px;
             }
-            
+
             .floating-order-btn {
                 width: 50px;
                 height: 50px;
@@ -307,6 +310,18 @@
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
+                <div class="card-header  d-flex justify-content-around align-items-center">
+                    <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                        <i class="ri-dashboard-line"></i>
+                        الرئيسية
+                    </a>
+                    <a href="{{ route('invoice.add') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> إنشاء فاتورة
+                    </a>
+                    <a href="{{ route('quotation.add') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> إنشاء عرض سعر
+                    </a>
+                </div>
                 <div class="col-12">
                     <div class="order-step-container">
                         <h4 class="card-title mb-4">
@@ -348,8 +363,7 @@
                                                     <i class="fas fa-search me-2"></i> بحث
                                                 </button>
                                                 @if (request('customer_query'))
-                                                    <a href="{{ route('order.index') }}"
-                                                        class="btn btn-outline-secondary">
+                                                    <a href="{{ route('order.index') }}" class="btn btn-outline-secondary">
                                                         <i class="fas fa-times me-2"></i>إعادة تعيين
                                                     </a>
                                                 @endif
@@ -372,7 +386,8 @@
                                                             <p class="card-text text-muted mb-2">
                                                                 <i class="fas fa-phone-alt me-2"></i>{{ $cust->mobile_no }}
                                                             </p>
-                                                            <span class="badge bg-success-light text-success small">اختر هذا الزبون</span>
+                                                            <span class="badge bg-success-light text-success small">اختر هذا
+                                                                الزبون</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -416,7 +431,8 @@
                                             <div class="position-relative">
                                                 <input type="text" id="order_product_search" class="form-control ps-5"
                                                     placeholder="ابحث عن منتج...">
-                                                <i class="fas fa-search position-absolute" style="top: 12px; left: 15px;"></i>
+                                                <i class="fas fa-search position-absolute"
+                                                    style="top: 12px; left: 15px;"></i>
                                             </div>
                                         </div>
 
@@ -431,7 +447,7 @@
                                                     data-cols="3">3</button>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="row g-3" id="order-products-list">
                                             @foreach ($products as $product)
                                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6 order-product-item grid-col"
@@ -476,9 +492,7 @@
                                                         <h6 class="mt-2 mb-1">{{ $product->name }}</h6>
                                                         <p class="text-success mb-2">
                                                             <strong>{{ $product->price }} شيكل</strong>
-                                                            @if($product->special_price)
-                                                                <small class="text-danger text-decoration-line-through ms-2">{{ $product->special_price }} شيكل</small>
-                                                            @endif
+
                                                         </p>
                                                         <div class="product-quantity-control">
                                                             <div class="quantity-btn"
@@ -496,14 +510,15 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                        
+
                                         <!-- Modal عرض تفاصيل المنتج للطلب -->
                                         <div class="modal fade" id="orderProductModal" tabindex="-1"
                                             aria-labelledby="orderProductModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-light">
-                                                        <h5 class="modal-title fw-bold" id="orderProductModalLabel">تفاصيل المنتج</h5>
+                                                        <h5 class="modal-title fw-bold" id="orderProductModalLabel">تفاصيل
+                                                            المنتج</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
@@ -520,37 +535,53 @@
 
                                                             <div class="col-md-7">
                                                                 <ul class="list-group list-group-flush">
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">الاسم:</strong>
-                                                                        <span id="order-modal-product-name" class="fw-bold text-dark"></span>
+                                                                        <span id="order-modal-product-name"
+                                                                            class="fw-bold text-dark"></span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">الرمز الخاص:</strong>
-                                                                        <span id="order-modal-unique-code" class="badge bg-info-light text-info"></span>
+                                                                        <span id="order-modal-unique-code"
+                                                                            class="badge bg-info-light text-info"></span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">الفئة:</strong>
-                                                                        <span id="order-modal-category" class="badge bg-success-light text-success"></span>
+                                                                        <span id="order-modal-category"
+                                                                            class="badge bg-success-light text-success"></span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">الوحدة:</strong>
-                                                                        <span id="order-modal-unit" class="fw-bold"></span>
+                                                                        <span id="order-modal-unit"
+                                                                            class="fw-bold"></span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">السعر:</strong>
-                                                                        <span id="order-modal-price" class="fw-bold text-success"></span>
+                                                                        <span id="order-modal-price"
+                                                                            class="fw-bold text-success"></span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">السعر الخاص:</strong>
-                                                                        <span id="order-modal-special-price" class="fw-bold text-danger"></span>
+                                                                        <span id="order-modal-special-price"
+                                                                            class="fw-bold text-danger"></span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center py-3">
                                                                         <strong class="text-muted">الكمية المتاحة:</strong>
-                                                                        <span id="order-modal-quantity" class="badge bg-success-light text-success"></span>
+                                                                        <span id="order-modal-quantity"
+                                                                            class="badge bg-success-light text-success"></span>
                                                                     </li>
                                                                     <li class="list-group-item py-3">
-                                                                        <strong class="text-muted d-block mb-2">الوصف:</strong>
-                                                                        <div id="order-modal-descr" class="p-3 bg-light rounded-2 text-dark"></div>
+                                                                        <strong
+                                                                            class="text-muted d-block mb-2">الوصف:</strong>
+                                                                        <div id="order-modal-descr"
+                                                                            class="p-3 bg-light rounded-2 text-dark"></div>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -571,7 +602,8 @@
                                         </div>
 
                                         <div class="text-center mt-4">
-                                            <button class="btn btn-secondary btn-prev me-2 px-4" onclick="prevOrderStep(1)">
+                                            <button class="btn btn-secondary btn-prev me-2 px-4"
+                                                onclick="prevOrderStep(1)">
                                                 <i class="fas fa-arrow-right me-2"></i> السابق
                                             </button>
                                             <button class="btn btn-success btn-next px-4" onclick="nextOrderStep(3)">
@@ -594,7 +626,8 @@
                                                         <i class="fas fa-file-invoice me-2"></i>تفاصيل الطلبية
                                                     </h5>
 
-                                                    <input type="hidden" name="customer_id" id="selected_order_customer_id">
+                                                    <input type="hidden" name="customer_id"
+                                                        id="selected_order_customer_id">
                                                     <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
                                                     <input type="hidden" name="order_no" value="{{ $order_no }}">
 
@@ -670,8 +703,8 @@
 
                                                     <div class="mb-3">
                                                         <label class="form-label">تاريخ التوصيل</label>
-                                                        <input type="date" name="delivery_date" class="form-control" 
-                                                               min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+                                                        <input type="date" name="delivery_date" class="form-control"
+                                                            min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                                     </div>
 
                                                     <div class="mb-3">
@@ -721,7 +754,7 @@
             specialPrice = null, capacity = null, weight = null, uniqueCode = null) {
 
             selectedProductId = productId;
-            
+
             // تعبئة بيانات المنتج الأساسية
             document.getElementById('order-modal-product-name').textContent = name;
             document.getElementById('order-modal-category').textContent = category;
@@ -732,7 +765,8 @@
             document.getElementById('order-modal-product-image').src = imageUrl;
 
             // تعبئة الحقول الجديدة
-            document.getElementById('order-modal-special-price').textContent = specialPrice ? specialPrice + ' شيكل' : 'غير محدد';
+            document.getElementById('order-modal-special-price').textContent = specialPrice ? specialPrice + ' شيكل' :
+                'غير محدد';
             document.getElementById('order-modal-unique-code').textContent = uniqueCode || 'غير محدد';
 
             // افتح الـ Modal
@@ -1041,7 +1075,7 @@
         // البحث عن المنتجات
         $(document).on('input', '#order_product_search', function() {
             const searchTerm = $(this).val().toLowerCase();
-            
+
             $('.order-product-item').each(function() {
                 const productName = $(this).find('h6').text().toLowerCase();
                 if (productName.includes(searchTerm)) {
@@ -1057,9 +1091,9 @@
             const cols = $(this).data('cols');
             $('.btn-grid').removeClass('active');
             $(this).addClass('active');
-            
+
             $('.grid-col').removeClass('col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6');
-            
+
             if (cols === 6) {
                 $('.grid-col').addClass('col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6');
             } else if (cols === 4) {
@@ -1148,10 +1182,10 @@
             @foreach ($products as $product)
                 orderProductQuantities[{{ $product->id }}] = 0;
             @endforeach
-            
+
             // عرض جميع المنتجات افتراضياً
             $('.order-product-item').show();
-            
+
             // تنشيط زر الشبكة الافتراضي
             $('.btn-grid[data-cols="6"]').addClass('active');
         });
