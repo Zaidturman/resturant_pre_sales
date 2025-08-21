@@ -219,22 +219,21 @@ class InvoiceController extends Controller
 
     public function InvoiceAdd()
     {
-        $category = Category::all();
-        $customer = Customer::all();
-        $products = Product::all();
+        $category = Category::orderBy('name')->get();
+        $customer = Customer::orderBy('name')->get();
+
+        // الحصول على المنتجات مرتبة حسب الفئة ثم الاسم (دون تجميع حسب الفئة)
+        $products = Product::with('category')
+            ->orderBy('category_id')
+            ->orderBy('name')
+            ->get();
 
         $invoice_data = Invoice::orderBy('id', 'desc')->first();
-        if ($invoice_data == null) {
-            $firstReg = '0';
-            $invoice_no = $firstReg + 1;
-        } else {
-            $invoice_data = Invoice::orderBy('id', 'desc')->first()->invoice_no;
-            $invoice_no = (int)$invoice_data + 1; // Cast to integer before adding
-
-        }
+        $invoice_no = $invoice_data ? (int)$invoice_data->invoice_no + 1 : 1;
 
         date_default_timezone_set('Asia/Hebron');
         $date = date('Y-m-d');
+
         return view('backend.invoice.invoice_new_add', compact('invoice_no', 'category', 'date', 'customer', 'products'));
     }
     public function InvoiceAddNew()
