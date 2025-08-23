@@ -460,6 +460,35 @@
                 height: 80px;
             }
         }
+
+        /* تنسيقات شريط أدوات الترتيب والتصفية */
+        .product-toolbar {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .sort-select {
+            width: 200px;
+        }
+
+        @media (max-width: 768px) {
+            .product-toolbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .sort-select {
+                width: 100%;
+            }
+        }
+        
+        /* تنسيقات إضافية */
+        .all-products-btn {
+            margin-bottom: 15px;
+        }
     </style>
 
     <div class="page-content">
@@ -564,7 +593,12 @@
                             <div class="tab-pane fade" id="step2">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h5 class="mb-3">اختر الفئة</h5>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="mb-0">اختر الفئة</h5>
+                                            <button class="btn btn-outline-primary all-products-btn" onclick="showAllProducts()">
+                                                <i class="fas fa-boxes me-2"></i>عرض كل المنتجات
+                                            </button>
+                                        </div>
                                         <div class="row mb-4">
                                             @foreach ($category as $cat)
                                                 <div class="col-md-2">
@@ -582,18 +616,34 @@
                                             <i class="fas fa-search"></i>
                                         </div>
 
+                                        <!-- شريط أدوات الترتيب والتصفية -->
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h5 class="mb-0">المنتجات</h5>
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-outline-secondary btn-grid"
-                                                    data-cols="6">6</button>
-                                                <button type="button" class="btn btn-outline-secondary btn-grid"
-                                                    data-cols="4">4</button>
-                                                <button type="button" class="btn btn-outline-secondary btn-grid"
-                                                    data-cols="3">3</button>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    <label class="form-label me-2">ترتيب حسب:</label>
+                                                    <select class="form-select form-select-sm sort-select" id="sort-products">
+                                                        <option value="name_asc">الأسماء من أ إلى ي</option>
+                                                        <option value="name_desc">الأسماء من ي إلى أ</option>
+                                                        <option value="price_asc">السعر (منخفض إلى مرتفع)</option>
+                                                        <option value="price_desc">السعر (مرتفع إلى منخفض)</option>
+                                                    </select>
+                                                </div>
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-outline-secondary btn-grid active" data-cols="6">
+                                                        <i class="fas fa-th-large"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-grid" data-cols="4">
+                                                        <i class="fas fa-th"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-grid" data-cols="3">
+                                                        <i class="fas fa-th-list"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="row" id="products-list  product-card-content">
+
+                                        <div class="row" id="products-list">
                                             @foreach ($products as $product)
                                                 <div class="col-md-2 product-item grid-col"
                                                     data-category-id="{{ $product->category_id }}"
@@ -903,6 +953,10 @@
     </button>
 
     <script>
+        // تخزين كميات المنتجات
+        let productQuantities = {};
+        let invoiceItems = {};
+
         // عدد الكروت في السطر
         function setGridColumns(cols) {
             const items = document.querySelectorAll('.grid-col');
@@ -920,6 +974,38 @@
             });
             // حفظ التفضيل
             localStorage.setItem('productGridCols', cols);
+        }
+
+        // دالة لترتيب المنتجات
+        function sortProducts(order) {
+            const productsList = document.getElementById('products-list');
+            const productItems = Array.from(productsList.getElementsByClassName('product-item'));
+            
+            // تصفية العناصر المرئية فقط
+            const visibleItems = productItems.filter(item => item.style.display !== 'none');
+            
+            visibleItems.sort((a, b) => {
+                const aName = a.querySelector('h6').textContent;
+                const bName = b.querySelector('h6').textContent;
+                const aPrice = parseFloat(a.querySelector('.text-primary').textContent);
+                const bPrice = parseFloat(b.querySelector('.text-primary').textContent);
+                
+                switch(order) {
+                    case 'name_asc':
+                        return aName.localeCompare(bName, 'ar');
+                    case 'name_desc':
+                        return bName.localeCompare(aName, 'ar');
+                    case 'price_asc':
+                        return aPrice - bPrice;
+                    case 'price_desc':
+                        return bPrice - aPrice;
+                    default:
+                        return 0;
+                }
+            });
+            
+            // إعادة ترتيب العناصر المرئية فقط
+            visibleItems.forEach(item => productsList.appendChild(item));
         }
 
         // عند الضغط على أزرار الشبكة
@@ -947,12 +1033,34 @@
             // تطبيق التنسيق
             setGridColumns(cols);
 
-            // عرض المنتجات بعد التهيئة
-            $('.product-item').show(); // تأكد أن المنتجات تُعرض بعد التهيئة
+            // تطبيق ترتيب المنتجات
+            const savedSortOrder = localStorage.getItem('productSortOrder') || 'name_asc';
+            document.getElementById('sort-products').value = savedSortOrder;
+            
+            // عرض جميع المنتجات افتراضيًا
+            showAllProducts();
+            
+            // ثم تطبيق الترتيب
+            setTimeout(() => {
+                sortProducts(savedSortOrder);
+            }, 100);
         });
-        // تخزين كميات المنتجات
-        let productQuantities = {};
-        let invoiceItems = {};
+
+        // حدث تغيير خيارات الترتيب
+        document.getElementById('sort-products').addEventListener('change', function() {
+            sortProducts(this.value);
+            localStorage.setItem('productSortOrder', this.value);
+        });
+
+        // عرض جميع المنتجات
+        function showAllProducts() {
+            $('.product-item').show();
+            $('.category-card').removeClass('active');
+            
+            // تطبيق الترتيب الحالي
+            const sortOrder = document.getElementById('sort-products').value;
+            sortProducts(sortOrder);
+        }
 
         // عرض تفاصيل المنتج في المودال
         function showProductDetailsAndOpenModal(productId, name, category, unit, price, quantity, descr, imageUrl,
@@ -980,6 +1088,7 @@
             var modal = new bootstrap.Modal(document.getElementById('productModal'));
             modal.show();
         }
+        
         // إضافة المنتج إلى الفاتورة من الـ Modal
         function addProductToInvoiceFromModal() {
             const productId = document.getElementById('productModal').getAttribute('data-product-id');
@@ -1001,6 +1110,7 @@
                 }).showToast();
             }
         }
+        
         $(document).ready(function() {
             // تهيئة Select2 للبحث عن الزبائن
             $('#customer_search').select2({
@@ -1028,6 +1138,10 @@
                 $('.product-item').filter(function() {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
+                
+                // إعادة تطبيق الترتيب بعد البحث
+                const sortOrder = document.getElementById('sort-products').value;
+                sortProducts(sortOrder);
             });
 
             // تغيير حالة الدفع
@@ -1132,6 +1246,10 @@
             if (element) {
                 $(element).addClass('active');
             }
+            
+            // تطبيق الترتيب الحالي
+            const sortOrder = document.getElementById('sort-products').value;
+            sortProducts(sortOrder);
         }
 
         // تغيير كمية المنتج
@@ -1181,6 +1299,7 @@
             rebuildInvoiceTable();
             updateInvoiceTotal();
         }
+        
         // إزالة منتج من الفاتورة
         function removeFromInvoice(productId) {
             delete invoiceItems[productId];
@@ -1396,7 +1515,9 @@
             $('#customer_search').val(null).trigger('change');
             $('.customer-card').removeClass('selected');
             $('.category-card').removeClass('active');
-            $('.product-item').show();
+            
+            // عرض جميع المنتجات
+            showAllProducts();
 
             // تحديث المجاميع
             updateInvoiceTotal();
