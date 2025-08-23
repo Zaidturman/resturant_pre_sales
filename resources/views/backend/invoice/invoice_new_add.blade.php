@@ -460,30 +460,6 @@
                 height: 80px;
             }
         }
-
-        /* تنسيقات شريط أدوات الترتيب والتصفية */
-        .product-toolbar {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-        }
-
-        .sort-select {
-            width: 200px;
-        }
-
-        @media (max-width: 768px) {
-            .product-toolbar {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .sort-select {
-                width: 100%;
-            }
-        }
     </style>
 
     <div class="page-content">
@@ -606,33 +582,17 @@
                                             <i class="fas fa-search"></i>
                                         </div>
 
-                                        <!-- شريط أدوات الترتيب والتصفية -->
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h5 class="mb-0">المنتجات</h5>
-                                            <div class="d-flex align-items-center">
-                                                <div class="me-3">
-                                                    <label class="form-label me-2">ترتيب حسب:</label>
-                                                    <select class="form-select form-select-sm sort-select" id="sort-products">
-                                                        <option value="name_asc">الأسماء من أ إلى ي</option>
-                                                        <option value="name_desc">الأسماء من ي إلى أ</option>
-                                                        <option value="price_asc">السعر (منخفض إلى مرتفع)</option>
-                                                        <option value="price_desc">السعر (مرتفع إلى منخفض)</option>
-                                                    </select>
-                                                </div>
-                                                <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-outline-secondary btn-grid active" data-cols="6">
-                                                        <i class="fas fa-th-large"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary btn-grid" data-cols="4">
-                                                        <i class="fas fa-th"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary btn-grid" data-cols="3">
-                                                        <i class="fas fa-th-list"></i>
-                                                    </button>
-                                                </div>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-outline-secondary btn-grid"
+                                                    data-cols="6">6</button>
+                                                <button type="button" class="btn btn-outline-secondary btn-grid"
+                                                    data-cols="4">4</button>
+                                                <button type="button" class="btn btn-outline-secondary btn-grid"
+                                                    data-cols="3">3</button>
                                             </div>
                                         </div>
-
                                         <div class="row" id="products-list  product-card-content">
                                             @foreach ($products as $product)
                                                 <div class="col-md-2 product-item grid-col"
@@ -943,10 +903,6 @@
     </button>
 
     <script>
-        // تخزين كميات المنتجات
-        let productQuantities = {};
-        let invoiceItems = {};
-
         // عدد الكروت في السطر
         function setGridColumns(cols) {
             const items = document.querySelectorAll('.grid-col');
@@ -964,36 +920,6 @@
             });
             // حفظ التفضيل
             localStorage.setItem('productGridCols', cols);
-        }
-
-        // دالة لترتيب المنتجات
-        function sortProducts(order) {
-            const productsList = document.getElementById('products-list');
-            const productItems = Array.from(productsList.getElementsByClassName('product-item'));
-            
-            productItems.sort((a, b) => {
-                const aName = a.querySelector('h6').textContent;
-                const bName = b.querySelector('h6').textContent;
-                const aPrice = parseFloat(a.querySelector('.text-primary').textContent);
-                const bPrice = parseFloat(b.querySelector('.text-primary').textContent);
-                
-                switch(order) {
-                    case 'name_asc':
-                        return aName.localeCompare(bName, 'ar');
-                    case 'name_desc':
-                        return bName.localeCompare(aName, 'ar');
-                    case 'price_asc':
-                        return aPrice - bPrice;
-                    case 'price_desc':
-                        return bPrice - aPrice;
-                    default:
-                        return 0;
-                }
-            });
-            
-            // إفراغ القائمة وإعادة添加 المنتجات مرتبة
-            productsList.innerHTML = '';
-            productItems.forEach(item => productsList.appendChild(item));
         }
 
         // عند الضغط على أزرار الشبكة
@@ -1021,20 +947,12 @@
             // تطبيق التنسيق
             setGridColumns(cols);
 
-            // تطبيق ترتيب المنتجات
-            const savedSortOrder = localStorage.getItem('productSortOrder') || 'name_asc';
-            document.getElementById('sort-products').value = savedSortOrder;
-            sortProducts(savedSortOrder);
-
             // عرض المنتجات بعد التهيئة
             $('.product-item').show(); // تأكد أن المنتجات تُعرض بعد التهيئة
         });
-
-        // حدث تغيير خيارات الترتيب
-        document.getElementById('sort-products').addEventListener('change', function() {
-            sortProducts(this.value);
-            localStorage.setItem('productSortOrder', this.value);
-        });
+        // تخزين كميات المنتجات
+        let productQuantities = {};
+        let invoiceItems = {};
 
         // عرض تفاصيل المنتج في المودال
         function showProductDetailsAndOpenModal(productId, name, category, unit, price, quantity, descr, imageUrl,
